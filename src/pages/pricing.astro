@@ -4,7 +4,7 @@
  *
  * Two sections:
  *   1. Walk-in sessions (2 cards)
- *   2. Monthly memberships (4 cards, "Full Reset" highlighted)
+ *   2. Monthly memberships (4 cards, contrast therapy highlighted)
  *
  * Every card links to /book. Wood/clay styling from design tokens.
  * Inbound link to /services ("See what's included →") sits above the walk-in
@@ -19,9 +19,9 @@ import CTAButton from '../components/CTAButton.astro';
 const walkIns = [
   {
     name: 'Without Ice Bath',
-    price: '₹500',
+    price: '₹1,000',
     cadence: 'per session',
-    duration: '~75 min',
+    duration: '3 hours',
     icon: 'flame' as const,
     features: [
       'Sauna & steam room',
@@ -32,18 +32,18 @@ const walkIns = [
     note: 'The full banya cycle, without the cold plunge.',
   },
   {
-    name: 'With Ice Bath',
-    price: '₹1000',
+    name: 'Contrast Therapy & Sound Healing',
+    price: '₹1,500',
     cadence: 'per session',
-    duration: '~90 min',
+    duration: '3 hours',
     icon: 'snowflake' as const,
     features: [
       'Everything in the base session',
-      'Cold plunge between rounds',
-      'Guided first plunge if you want it',
+      'Contrast therapy between rounds',
+      'Sound healing',
       'Shower included',
     ],
-    note: 'Heat and cold together — the traditional full cycle.',
+    note: 'Heat, cold, and sound together for a complete reset.',
     featured: true,
   },
 ];
@@ -52,49 +52,48 @@ const walkIns = [
 // sessions = short differentiator under the price (not repeated in the list)
 const tiers = [
   {
-    name: 'Steam Only',
-    price: '₹3,500',
+    name: 'Sauna & Ice Bath',
+    price: '₹7,000',
     cadence: '/ month',
     sessions: '8 sessions',
     icon: 'flame' as const,
     features: [
-      'Sauna & steam room',
-      'No ice bath access',
+      'Sauna & ice bath',
       'Shower & tea included',
       'Cancel any time',
     ],
     featured: false,
-    cta: 'Choose Steam Only',
+    cta: 'Choose Sauna & Ice Bath',
   },
   {
-    name: 'Full Reset',
-    price: '₹7,000',
+    name: 'Contrast Therapy & Sound Healing',
+    price: '₹10,000',
     cadence: '/ month',
-    sessions: '8 sessions · ice included',
+    sessions: '8 sessions · sound healing included',
     icon: 'branch' as const,
     features: [
-      'Sauna & steam room',
-      'Ice bath every visit',
+      'Contrast therapy every visit',
+      'Sound healing included',
       'Shower & tea included',
       'Cancel any time',
     ],
     featured: true,
-    cta: 'Choose Full Reset',
+    cta: 'Choose Contrast Therapy',
   },
   {
-    name: 'Unlimited Local',
-    price: '₹15,000',
+    name: 'Premium',
+    price: '₹20,000',
     cadence: '/ month',
-    sessions: 'Unlimited · 1 / day',
+    sessions: 'Flexible membership',
     icon: 'droplet' as const,
     features: [
       'Sauna, steam & ice bath',
-      'Fair-use cap of 1 / day',
+      'Flexible membership',
       'Shower & tea included',
-      'Built for locals',
+      'Built for regulars',
     ],
     featured: false,
-    cta: 'Choose Unlimited',
+    cta: 'Choose Premium',
   },
   {
     name: 'Couple’s',
@@ -116,7 +115,7 @@ const tiers = [
 
 <BaseLayout
   title="Pricing & Memberships"
-  description="Hidden Oak banya pricing — walk-in sessions from ₹500, monthly memberships from ₹3,500. Sauna, steam, ice bath, and shower. Arambol, Goa."
+  description="Hidden Oak banya pricing — walk-in sessions from ₹1,000, monthly memberships from ₹7,000. Sauna, ice bath, contrast therapy, and sound healing in Arambol, Goa."
 >
   <Hero
     compact
@@ -137,8 +136,8 @@ const tiers = [
         <p class="eyebrow">Walk-in</p>
         <h2>Pay per session</h2>
         <p class="lede">
-          Coming once, or passing through? Both options include the full sauna and
-          steam experience. The only difference is the ice bath.
+          Coming once, or passing through? Both options include sauna and ice bath.
+          Choose contrast therapy and sound healing for a deeper reset.
         </p>
         <p class="block-aside">
           Not sure what's included? <a href="/services">See what's included →</a>
@@ -272,8 +271,8 @@ const tiers = [
           with a week's notice.
         </li>
         <li>
-          <span class="policies__label">Fair-use cap</span>
-          The Unlimited Local membership allows one session per day, per member.
+          <span class="policies__label">Premium access</span>
+          Premium membership offers flexible access for regular visitors.
         </li>
         <li>
           <span class="policies__label">Health first</span>

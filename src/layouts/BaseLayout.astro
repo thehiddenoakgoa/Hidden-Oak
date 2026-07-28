@@ -16,7 +16,7 @@ interface Props {
 
 const {
   title,
-  description = 'Hidden Oak — a traditional Russian banya in Arambol, Goa. Wood-fired steam, ice bath, and quiet among the palms. Sessions from ₹500.',
+  description = 'Hidden Oak — a traditional Russian banya in Arambol, Goa. Wood-fired steam, ice bath, and quiet among the palms. Sessions from ₹1,000.',
   ogImage = '/images/hero/hero-poster.jpg',
   ogType = 'website',
 } = Astro.props;
@@ -63,10 +63,11 @@ const businessJsonLd = {
   ],
   sameAs: [],
   makesOffer: [
-    { '@type': 'Offer', name: 'Banya Session (without ice bath)', price: '500', priceCurrency: 'INR' },
-    { '@type': 'Offer', name: 'Banya Session (with ice bath)', price: '1000', priceCurrency: 'INR' },
-    { '@type': 'Offer', name: 'Steam Only Membership', price: '3500', priceCurrency: 'INR' },
-    { '@type': 'Offer', name: 'Full Reset Membership', price: '7000', priceCurrency: 'INR' },
+    { '@type': 'Offer', name: 'Banya Session (without ice bath)', price: '1000', priceCurrency: 'INR' },
+    { '@type': 'Offer', name: 'Contrast Therapy & Sound Healing', price: '1500', priceCurrency: 'INR' },
+    { '@type': 'Offer', name: 'Sauna & Ice Bath Membership', price: '7000', priceCurrency: 'INR' },
+    { '@type': 'Offer', name: 'Contrast Therapy & Sound Healing Membership', price: '10000', priceCurrency: 'INR' },
+    { '@type': 'Offer', name: 'Premium Membership', price: '20000', priceCurrency: 'INR' },
   ],
 };
 ---
