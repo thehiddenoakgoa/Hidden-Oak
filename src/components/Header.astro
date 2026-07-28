@@ -13,6 +13,8 @@ const nav = [
   { href: '/location', label: 'Location' },
 ];
 
+const WHATSAPP_URL = 'https://wa.me/919818083992';
+
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) =>
   href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
@@ -51,7 +53,7 @@ const isActive = (href: string) =>
           ))
         }
         <li class="site-nav__cta-li">
-          <CTAButton href="/book" size="md" class="site-nav__cta">Book</CTAButton>
+          <CTAButton href={WHATSAPP_URL} size="md" class="site-nav__cta">Call</CTAButton>
         </li>
       </ul>
     </nav>
