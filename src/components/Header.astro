@@ -21,26 +21,7 @@ const isActive = (href: string) =>
 <header class="site-nav-bar" id="site-header" data-scrolled="false">
   <div class="site-nav-bar__inner container">
     <a href="/" class="brand" aria-label="Hidden Oak — home">
-      <span class="brand__mark" aria-hidden="true">
-        <svg viewBox="0 0 40 40" width="36" height="36" fill="none">
-          <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.2" opacity="0.45" />
-          <path
-            d="M20 8c0 0-7 7.5-7 13a7 7 0 0014 0c0-5.5-7-13-7-13z"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linejoin="round"
-            fill="none"
-          />
-          <path
-            d="M20 13v12M17.2 16.5c1.2-.7 2-1.4 2.8-2.4M22.8 16.5c-1.2-.7-2-1.4-2.8-2.4M17 20.5c1.4-.5 2.4-1.2 3-2.2M23 20.5c-1.4-.5-2.4-1.2-3-2.2"
-            stroke="currentColor"
-            stroke-width="1.2"
-            stroke-linecap="round"
-          />
-          <!-- ice droplet accent -->
-          <path d="M28 26c0 1.4-1.1 2.5-2.5 2.5S23 27.4 23 26c0-1.6 2.5-4.2 2.5-4.2S28 24.4 28 26z" fill="currentColor" opacity="0.55" />
-        </svg>
-      </span>
+      <img class="brand__logo" src="/images/brand/hidden-oak-logo.png" alt="" width="1024" height="718" />
       <span class="brand__text">
         <span class="brand__name">Hidden Oak</span>
         <span class="brand__locale">Heat · Ice · Arambol</span>
@@ -129,29 +110,14 @@ const isActive = (href: string) =>
   }
   .brand:hover { transform: translateY(-1px); }
 
-  .brand__mark {
+  .brand__logo {
     display: grid;
-    place-items: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    color: #fff8ef;
-    background: rgba(255, 248, 239, 0.12);
-    border: 1px solid rgba(255, 248, 239, 0.28);
-    backdrop-filter: blur(8px);
-    transition:
-      color var(--duration-fast) var(--ease-soft),
-      background var(--duration-fast) var(--ease-soft),
-      border-color var(--duration-fast) var(--ease-soft),
-      box-shadow var(--duration-fast) var(--ease-soft);
+    width: 74px;
+    height: auto;
+    filter: drop-shadow(0 1px 9px rgba(0, 0, 0, 0.3));
   }
-  .site-nav-bar[data-scrolled='true'] .brand__mark {
-    color: var(--forest-deep);
-    background: linear-gradient(145deg, rgba(61, 90, 72, 0.12), rgba(255, 255, 255, 0.55));
-    border-color: var(--color-border);
-  }
-  .brand:hover .brand__mark {
-    box-shadow: 0 0 24px rgba(232, 93, 50, 0.25);
+  .site-nav-bar[data-scrolled='true'] .brand__logo {
+    filter: drop-shadow(0 1px 3px rgba(47, 33, 24, 0.14));
   }
 
   .brand__text {

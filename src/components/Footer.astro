@@ -21,7 +21,9 @@ const links = [
   <div class="site-footer__glow" aria-hidden="true"></div>
   <div class="site-footer__inner container">
     <div class="site-footer__brand">
-      <a href="/" class="brand-mark">Hidden Oak</a>
+      <a href="/" class="brand-mark" aria-label="Hidden Oak home">
+        <img src="/images/brand/hidden-oak-logo.png" alt="Hidden Oak" width="1024" height="718" />
+      </a>
       <p class="brand-tagline">
         A traditional Russian banya on the Goan coast — wood-fired heat, ice plunge,
         and quiet among the palms of Arambol.
@@ -101,14 +103,16 @@ const links = [
     position: relative;
   }
   .brand-mark {
-    font-family: var(--font-serif);
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
-    color: var(--forest-deep);
-    text-decoration: none;
-    letter-spacing: var(--tracking-tight);
+    display: inline-block;
+    width: 150px;
+    line-height: 0;
   }
-  .brand-mark:hover { color: var(--forest-green); }
+  .brand-mark img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .brand-mark:hover { opacity: 0.82; }
   .brand-tagline {
     margin-top: var(--space-3);
     color: var(--color-ink-subtle);
