@@ -23,7 +23,7 @@ const isActive = (href: string) =>
 <header class="site-nav-bar" id="site-header" data-scrolled="false">
   <div class="site-nav-bar__inner container">
     <a href="/" class="brand" aria-label="Hidden Oak — home">
-      <img class="brand__logo" src="/images/brand/hidden-oak-logo.png" alt="" width="1024" height="718" />
+      <img class="brand__logo" src="/images/brand/hidden-oak-logo.png" alt="" width="200" height="200" />
       <span class="brand__text">
         <span class="brand__name">Hidden Oak</span>
         <span class="brand__locale">Heat · Ice · Arambol</span>
@@ -113,13 +113,9 @@ const isActive = (href: string) =>
   .brand:hover { transform: translateY(-1px); }
 
   .brand__logo {
-    display: grid;
+    display: block;
     width: 74px;
     height: auto;
-    filter: drop-shadow(0 1px 9px rgba(0, 0, 0, 0.3));
-  }
-  .site-nav-bar[data-scrolled='true'] .brand__logo {
-    filter: drop-shadow(0 1px 3px rgba(47, 33, 24, 0.14));
   }
 
   .brand__text {
