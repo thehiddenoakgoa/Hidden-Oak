@@ -153,11 +153,11 @@ const isActive = (href: string) =>
   }
   .site-nav__link:hover {
     color: #4a3a24;
-    background: rgba(111, 91, 63, 0.1);
+    background: transparent;
   }
   .site-nav__link.active {
     color: #4a3a24;
-    background: rgba(111, 91, 63, 0.12);
+    background: transparent;
   }
 
   .site-nav__cta-li { margin-inline-start: 0.35rem; }
@@ -173,8 +173,8 @@ const isActive = (href: string) =>
       align-items: center;
       width: 46px;
       height: 46px;
-      background: rgba(111, 91, 63, 0.1);
-      border: 1px solid rgba(111, 91, 63, 0.35);
+      background: transparent;
+      border: 1px solid transparent;
       border-radius: var(--radius-md);
       cursor: pointer;
       gap: 5px;
@@ -198,9 +198,8 @@ const isActive = (href: string) =>
       top: 100%;
       left: 0;
       right: 0;
-      background: rgba(24, 18, 14, 0.96);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 248, 239, 0.1);
+      background: transparent;
+      border-bottom: 1px solid transparent;
       max-height: 0;
       overflow: hidden;
       opacity: 0;
@@ -228,12 +227,12 @@ const isActive = (href: string) =>
       min-height: 48px;
       border-radius: var(--radius-md);
       text-shadow: none;
-      color: #f5ead4;
+      color: #6f5b3f;
     }
     .site-nav__link:hover,
     .site-nav__link.active {
-      color: #ffd9a0;
-      background: rgba(255, 248, 239, 0.1);
+      color: #4a3a24;
+      background: transparent;
     }
     .site-nav__cta-li { margin: var(--space-2) 0 0; }
     :global(.site-nav__cta) { width: 100%; min-height: 48px; }
