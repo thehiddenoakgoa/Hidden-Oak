@@ -129,12 +129,6 @@ const isActive = (href: string) =>
     text-shadow: 0 1px 2px rgba(255, 248, 239, 0.4);
     transition: color var(--duration-fast) var(--ease-soft);
   }
-  .site-nav-bar[data-scrolled='true'] .brand__name {
-    color: #6f5b3f;
-  }
-  .site-nav-bar[data-scrolled='true'] .brand__locale {
-    color: rgba(111, 91, 63, 0.82);
-  }
 
   .site-nav__list {
     display: flex;
@@ -165,14 +159,6 @@ const isActive = (href: string) =>
     color: #4a3a24;
     background: rgba(111, 91, 63, 0.12);
   }
-  .site-nav-bar[data-scrolled='true'] .site-nav__link {
-    color: #6f5b3f;
-  }
-  .site-nav-bar[data-scrolled='true'] .site-nav__link:hover,
-  .site-nav-bar[data-scrolled='true'] .site-nav__link.active {
-    color: #4a3a24;
-    background: rgba(111, 91, 63, 0.1);
-  }
 
   .site-nav__cta-li { margin-inline-start: 0.35rem; }
   :global(.site-nav__cta) { white-space: nowrap; }
@@ -196,10 +182,6 @@ const isActive = (href: string) =>
       transition: border-color var(--duration-fast) var(--ease-soft),
         background var(--duration-fast) var(--ease-soft);
     }
-    .site-nav-bar[data-scrolled='true'] .nav-burger {
-      background: rgba(111, 91, 63, 0.1);
-      border-color: rgba(111, 91, 63, 0.35);
-    }
     .nav-burger span {
       display: block;
       height: 2px;
@@ -209,9 +191,6 @@ const isActive = (href: string) =>
       transition: transform var(--duration-fast) var(--ease-soft),
         opacity var(--duration-fast) var(--ease-soft),
         background var(--duration-fast) var(--ease-soft);
-    }
-    .site-nav-bar[data-scrolled='true'] .nav-burger span {
-      background: #6f5b3f;
     }
 
     .site-nav {
