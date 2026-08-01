@@ -112,19 +112,18 @@ const isActive = (href: string) =>
 
   .brand__logo {
     display: block;
-    width: 96px;
+    width: 74px;
     height: auto;
   }
 
   .brand__text {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    line-height: 1.1;
+    line-height: 1.05;
   }
   .brand__name {
     font-family: var(--font-serif);
-    font-size: var(--text-lg);
+    font-size: var(--text-md);
     font-weight: var(--weight-bold);
     letter-spacing: var(--tracking-tight);
     color: #fff8ef;
@@ -132,11 +131,11 @@ const isActive = (href: string) =>
     transition: color var(--duration-fast) var(--ease-soft);
   }
   .brand__locale {
-    font-size: 0.68rem;
+    font-size: 0.62rem;
     text-transform: uppercase;
     letter-spacing: var(--tracking-caps);
     color: rgba(255, 248, 239, 0.78);
-    margin-top: 4px;
+    margin-top: 3px;
     transition: color var(--duration-fast) var(--ease-soft);
   }
   .site-nav-bar[data-scrolled='true'] .brand__name {
