@@ -76,14 +76,10 @@ const isActive = (href: string) =>
       backdrop-filter var(--duration-fast) var(--ease-soft);
   }
 
-  /* Over hero: light text, glass-faint */
+  /* Over hero: light text, fully transparent */
   .site-nav-bar:not([data-scrolled='true']) {
-    background: linear-gradient(
-      180deg,
-      rgba(20, 16, 12, 0.42) 0%,
-      rgba(20, 16, 12, 0.12) 70%,
-      transparent 100%
-    );
+    background: transparent;
+    border-bottom-color: transparent;
   }
 
   .site-nav-bar[data-scrolled='true'] {
