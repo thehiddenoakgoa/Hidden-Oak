@@ -372,8 +372,7 @@ const reasons = [
   /* Stats */
   .stats-strip {
     position: relative;
-    margin-top: calc(-1 * var(--space-5));
-    z-index: 5;
+    margin-top: var(--space-5);
     padding-inline: var(--space-3);
   }
   .stats {
@@ -906,7 +905,6 @@ const reasons = [
   }
   @media (max-width: 520px) {
     .journey { grid-template-columns: 1fr; }
-    .stats-strip { margin-top: calc(-1 * var(--space-3)); }
     .place__frames { min-height: 340px; }
     .place__frame--tall { border-radius: 72px 72px var(--radius-lg) var(--radius-lg); }
     .why__gallery { grid-template-columns: 1fr; }
