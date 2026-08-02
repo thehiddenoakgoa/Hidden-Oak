@@ -7,9 +7,7 @@
  * Images are local, lightweight visual studies. Each entry has a base src +
  * intrinsic width/height so the layout reserves correct space before load.
  *
- * Responsive images: uses Cloudflare Image Resizing when available (via /cdn-cgi/image/
- * path), with standard <img> srcset as fallback. Pattern documented in the
- * <picture>/<img> below. Both work — CF Resizing kicks in automatically on Pages.
+ * Images are served directly from /public/images/gallery/ (no edge resizing).
  *
  * Lightbox: vanilla JS, keyboard-navigable (arrows + Escape + Tab focus trap),
  * with full ARIA labeling. No dependencies.
@@ -32,7 +30,7 @@ const categories = [
 ];
 
 // ---- Image data ---------------------------------------------------------
-// filename: file in /public/images/gallery/ (no extension mismatch — all .svg for now)
+// filename: file in /public/images/gallery/
 // When real photos arrive, swap the .svg for .jpg/.webp and update w/h.
 // span: 'tall' | 'wide' | 'square' — controls masonry rhythm via row-span.
 type Img = {
@@ -73,24 +71,6 @@ const images: Img[] = [
 // Base path for gallery images.
 const IMG_BASE = '/images/gallery';
 
-/**
- * Cloudflare Image Resizing helper.
- * On Cloudflare Pages, /cdn-cgi/image/ automatically resizes on the edge.
- * Format: /cdn-cgi/image/<options>/<origin-path>
- * Docs: https://developers.cloudflare.com/images/transform-images/
- *
- * We build a srcset across standard breakpoints. Off-CF (local dev), the
- * /cdn-cgi/image/ path 404s gracefully — but to keep dev clean we only emit
- * it for raster formats. For SVG placeholders we just use the raw path (SVGs
- * are resolution-independent and don't need resizing).
- */
-function cfImage(path: string, w: number): string {
-  return `/cdn-cgi/image/width=${w},quality=80,format=auto/${path}`;
-}
-
-function isRaster(filename: string): boolean {
-  return /\.(jpg|jpeg|png|webp)$/i.test(filename);
-}
 ---
 
 <BaseLayout
@@ -130,15 +110,6 @@ function isRaster(filename: string): boolean {
         {
           images.map((img, i) => {
             const full = `${IMG_BASE}/${img.src}`;
-            const raster = isRaster(img.src);
-            // For raster images (future real photos): emit a srcset with CF Image Resizing.
-            // For SVG placeholders: plain src (SVGs scale without resizing).
-            const srcset = raster
-              ? [400, 600, 800, 1000, 1200]
-                  .filter(w => w <= img.w)
-                  .map(w => `${cfImage(full, w)} ${w}w`)
-                  .join(', ')
-              : undefined;
             return (
               <button
                 class:list={['tile', `tile--${img.span || 'std'}`, `cat-${img.category}`]}
@@ -150,8 +121,6 @@ function isRaster(filename: string): boolean {
               >
                 <img
                   src={full}
-                  srcset={srcset}
-                  sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
                   width={img.w}
                   height={img.h}
                   alt={img.alt}
