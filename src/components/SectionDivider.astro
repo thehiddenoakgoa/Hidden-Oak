@@ -1,7 +1,7 @@
 ---
 /**
  * SectionDivider — ornamental break between page sections.
- * Centered birch/oak venik motif (generated SVG) flanked by hairline rules.
+ * Centered brand logo flanked by hairline rules.
  */
 interface Props {
   variant?: 'glyph' | 'line' | 'motif';
@@ -15,7 +15,15 @@ const { variant = 'glyph', class: className = '' } = Astro.props;
   <span class="divider__rule"></span>
   {
     variant === 'glyph' && (
-      <span class="divider__glyph deco-motif deco-motif--glyph"></span>
+      <img
+        class="divider__glyph"
+        src="/images/brand/hidden-oak-logo.png"
+        alt=""
+        width="1024"
+        height="1024"
+        loading="lazy"
+        decoding="async"
+      />
     )
   }
   {
@@ -58,7 +66,11 @@ const { variant = 'glyph', class: className = '' } = Astro.props;
 
   .divider__glyph {
     flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
     opacity: 0.9;
+    display: block;
   }
 
   .divider__motif {
