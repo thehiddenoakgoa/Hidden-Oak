@@ -13,6 +13,8 @@ interface Props {
   video?: string;
   poster?: string;
   image?: string;
+  /** CSS object-position for the poster image, e.g. "center 70%" */
+  posterPosition?: string;
   primaryCta?: { href: string; label: string };
   secondaryCta?: { href: string; label: string };
   align?: 'left' | 'center';
@@ -31,6 +33,7 @@ const {
   video,
   poster,
   image,
+  posterPosition,
   primaryCta = { href: '/book', label: 'Book a Session' },
   secondaryCta,
   align = 'left',
@@ -86,6 +89,7 @@ const showHeat = !ice || dual;
           loading="eager"
           decoding="async"
           fetchpriority="high"
+          style={posterPosition ? `object-position: ${posterPosition}` : undefined}
         />
       )
     }
