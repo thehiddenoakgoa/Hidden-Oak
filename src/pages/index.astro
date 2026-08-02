@@ -751,10 +751,19 @@ const reasons = [
 
   /* Price grid */
   .price-section {
+    position: relative;
+    isolation: isolate;
+  }
+  .price-section::before {
+    content: '';
+    position: absolute;
+    inset: var(--space-5) 0;
+    z-index: -1;
     background:
-      radial-gradient(60% 70% at 15% 20%, rgba(232, 93, 50, 0.16), transparent 60%),
-      radial-gradient(55% 70% at 88% 55%, rgba(126, 182, 212, 0.18), transparent 60%),
-      radial-gradient(70% 55% at 50% 100%, rgba(196, 106, 40, 0.12), transparent 60%);
+      radial-gradient(55% 70% at 12% 25%, rgba(232, 93, 50, 0.32), transparent 62%),
+      radial-gradient(50% 70% at 90% 50%, rgba(126, 182, 212, 0.34), transparent 62%),
+      radial-gradient(60% 55% at 50% 100%, rgba(196, 106, 40, 0.26), transparent 60%);
+    filter: blur(6px);
   }
   .price-grid {
     display: grid;
@@ -768,10 +777,10 @@ const reasons = [
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    background: rgba(255, 250, 242, 0.5);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border: 1px solid rgba(255, 250, 242, 0.4);
+    background: rgba(255, 250, 242, 0.28);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    border: 1px solid rgba(255, 250, 242, 0.35);
     box-shadow: var(--shadow-sm);
   }
   .price-card--feature {
@@ -780,9 +789,9 @@ const reasons = [
     background:
       radial-gradient(ellipse 80% 50% at 50% 0%, rgba(61, 90, 72, 0.08), transparent 60%),
       radial-gradient(ellipse 50% 40% at 100% 100%, rgba(126, 182, 212, 0.12), transparent 50%),
-      rgba(255, 250, 242, 0.5);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
+      rgba(255, 250, 242, 0.28);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
   }
   .price-card__badge {
     position: absolute;
