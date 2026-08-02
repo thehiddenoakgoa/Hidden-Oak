@@ -405,6 +405,18 @@ const showHeat = !ice || dual;
         rgba(18, 32, 42, 0.55) 100%
       );
   }
+  /* Compact heroes: fade the bottom edge out so no dark band
+     appears between the hero image and the section below it. */
+  .hero--compact .hero__overlay {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(28, 20, 14, 0.36) 0%,
+        rgba(28, 20, 14, 0.08) 45%,
+        rgba(28, 20, 14, 0.04) 100%
+      ),
+      radial-gradient(120% 100% at 50% 45%, transparent 45%, rgba(28, 20, 14, 0.14) 100%);
+  }
 
   .hero__content {
     position: relative;
