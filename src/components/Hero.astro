@@ -24,6 +24,8 @@ interface Props {
   ice?: boolean;
   /** Dual heat + ice particles */
   dual?: boolean;
+  /** Keep the title on a single line (white-space: nowrap) */
+  titleNowrap?: boolean;
 }
 
 const {
@@ -41,6 +43,7 @@ const {
   atmosphere = true,
   ice = false,
   dual = true,
+  titleNowrap = false,
 } = Astro.props;
 
 const bgImage = poster || image;
@@ -168,7 +171,7 @@ const showHeat = !ice || dual;
       )
     }
     {eyebrow && <p class="eyebrow hero__eyebrow" data-reveal="fade">{eyebrow}</p>}
-    <h1 class="hero__title" data-reveal style="--reveal-delay: 60ms">{title}</h1>
+    <h1 class:list={['hero__title', { 'hero__title--nowrap': titleNowrap }]} data-reveal style="--reveal-delay: 60ms">{title}</h1>
     {subtitle && (
       <p class="hero__subtitle" data-reveal style="--reveal-delay: 140ms">
         {subtitle}
@@ -475,6 +478,10 @@ const showHeat = !ice || dual;
     color: #fff8ef;
     background: none;
   }
+  .hero__title--nowrap {
+    max-width: none;
+    white-space: nowrap;
+  }
   .hero__eyebrow {
     color: #fff1cf;
     padding: 0.42rem 0.72rem;
@@ -560,6 +567,9 @@ const showHeat = !ice || dual;
     .hero__title {
       font-size: var(--text-3xl);
       max-width: 12ch;
+    }
+    .hero__title--nowrap {
+      max-width: none;
     }
     .hero__subtitle {
       font-size: var(--text-sm);
