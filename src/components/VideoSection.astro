@@ -1,0 +1,101 @@
+---
+/**
+ * VideoSection — embeds the brand's YouTube channel uploads as a responsive
+ * video player, styled to match the site. Uses the channel's uploads playlist
+ * (UU + channel-id) so new videos appear automatically. No API key required.
+ */
+interface Props {
+  title?: string;
+  lede?: string;
+  eyebrow?: string;
+  channelId: string;
+  channelUrl: string;
+  channelLabel?: string;
+  class?: string;
+}
+
+const {
+  title = 'See the sauna in motion.',
+  lede = 'Steam rising, ice crackling, and the quiet rhythm of a session — straight from our channel.',
+  eyebrow = 'Watch',
+  channelId,
+  channelUrl,
+  channelLabel = 'Watch all videos on YouTube',
+  class: className = '',
+} = Astro.props;
+
+// Uploads playlist for a channel: "UU" + channel id after the leading "UC".
+const uploadsList = `UU${channelId.replace(/^UC/, '')}`;
+const embedSrc = `https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsList}`;
+---
+
+<section class:list={['section video-section', className]} data-reveal>
+  <div class="container">
+    <div class="video-section__head">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+      <p class="lede">{lede}</p>
+    </div>
+    <div class="video-section__frame">
+      <iframe
+        class="video-section__player"
+        src={embedSrc}
+        title={title}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"
+      ></iframe>
+    </div>
+    <div class="video-section__foot">
+      <a href={channelUrl} target="_blank" rel="noopener">{channelLabel}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .video-section__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+  }
+  .video-section__head h2 { color: var(--forest-deep); }
+  .video-section__head .lede { margin-inline: auto; }
+
+  .video-section__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+  }
+  .video-section__player {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .video-section__foot {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+  .video-section__foot a {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--clay-terracotta);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-soft);
+  }
+  .video-section__foot a:hover { color: var(--clay-deep); }
+</style>
