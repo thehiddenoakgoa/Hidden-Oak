@@ -741,7 +741,7 @@ const reasons = [
   }
   .why__gallery {
     display: grid;
-    grid-template-columns: 1fr 1fr 1.4fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-3);
     min-height: 280px;
   }
@@ -901,7 +901,6 @@ const reasons = [
     .place { grid-template-columns: 1fr; }
     .place__frames { max-width: 640px; width: 100%; }
     .why__gallery { grid-template-columns: 1fr 1fr; }
-    .why__shot--wide { grid-column: span 2; }
     .closing { grid-template-columns: 1fr; }
     .closing__visual { min-height: 240px; }
   }
@@ -910,6 +909,5 @@ const reasons = [
     .place__frames { min-height: 340px; }
     .place__frame--tall { border-radius: 72px 72px var(--radius-lg) var(--radius-lg); }
     .why__gallery { grid-template-columns: 1fr; }
-    .why__shot--wide { grid-column: auto; }
   }
 </style>
