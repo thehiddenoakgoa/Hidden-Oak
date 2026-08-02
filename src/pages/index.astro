@@ -307,7 +307,7 @@ const reasons = [
   <SectionDivider />
 
   {/* Pricing + membership */}
-  <section class="section" data-reveal>
+  <section class="section price-section" data-reveal>
     <div class="container price-grid">
       <article class="price-card surface-card" data-reveal>
         <p class="eyebrow">Walk-in</p>
@@ -750,6 +750,12 @@ const reasons = [
   .why__shot--wide { min-height: 260px; }
 
   /* Price grid */
+  .price-section {
+    background:
+      radial-gradient(60% 70% at 15% 20%, rgba(232, 93, 50, 0.16), transparent 60%),
+      radial-gradient(55% 70% at 88% 55%, rgba(126, 182, 212, 0.18), transparent 60%),
+      radial-gradient(70% 55% at 50% 100%, rgba(196, 106, 40, 0.12), transparent 60%);
+  }
   .price-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -762,14 +768,21 @@ const reasons = [
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
+    background: rgba(255, 250, 242, 0.5);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255, 250, 242, 0.4);
+    box-shadow: var(--shadow-sm);
   }
   .price-card--feature {
-    border-color: var(--clay-terracotta);
+    border-color: rgba(196, 106, 40, 0.55);
     box-shadow: var(--shadow-lg), var(--shadow-glow);
     background:
       radial-gradient(ellipse 80% 50% at 50% 0%, rgba(61, 90, 72, 0.08), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 100% 100%, rgba(126, 182, 212, 0.1), transparent 50%),
-      var(--color-bg-elevated);
+      radial-gradient(ellipse 50% 40% at 100% 100%, rgba(126, 182, 212, 0.12), transparent 50%),
+      rgba(255, 250, 242, 0.5);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
   }
   .price-card__badge {
     position: absolute;
