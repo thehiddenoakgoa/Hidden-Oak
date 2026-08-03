@@ -110,7 +110,7 @@ const showHeat = !ice || dual;
       hasYoutube && youtubeId && (
         <iframe
           class="hero__youtube"
-          src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=1&loop=1&playsinline=1&playlist=${youtubeId}&rel=0`}
+          src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=1&loop=1&playsinline=1&playlist=${youtubeId}&rel=0&enablejsapi=1`}
           title={title}
           loading="eager"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -245,6 +245,36 @@ const showHeat = !ice || dual;
           video.play().catch(function () {});
         }
       });
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
+      var hero = document.currentScript && document.currentScript.closest('.hero');
+      if (!hero) return;
+      var iframe = hero.querySelector('iframe.hero__youtube');
+      if (!iframe) return;
+
+      var started = false;
+      function fire() {
+        if (started) return;
+        started = true;
+        setTimeout(function () {
+          hero.classList.add('hero--live');
+        }, 2000);
+      }
+
+      window.addEventListener('message', function (e) {
+        if (e.source !== iframe.contentWindow) return;
+        var d;
+        try { d = JSON.parse(e.data); } catch (err) { return; }
+        if (d.event === 'onStateChange' && d.info === 1) fire();
+      });
+
+      // Fallback: if playback state is never reported, release effects anyway.
+      setTimeout(function () {
+        if (!started) fire();
+      }, 4000);
     })();
   </script>
 </section>
@@ -442,6 +472,34 @@ const showHeat = !ice || dual;
     z-index: 3;
     pointer-events: none;
     background: rgba(10, 8, 6, 0.5);
+  }
+  /* Atmosphere + reveal effects wait until the YouTube hero video starts:
+     JS adds .hero--live ~2s after playback begins. */
+  .hero--has-youtube .hero__steam,
+  .hero--has-youtube .ember-field,
+  .hero--has-youtube .frost-field {
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-out);
+  }
+  .hero--has-youtube:not(.hero--live) .hero__steam-cloud,
+  .hero--has-youtube:not(.hero--live) .ember,
+  .hero--has-youtube:not(.hero--live) .frost,
+  .hero--has-youtube:not(.hero--live) .hero__scroll-line {
+    animation-play-state: paused;
+  }
+  .hero--has-youtube.hero--live .hero__steam,
+  .hero--has-youtube.hero--live .ember-field,
+  .hero--has-youtube.hero--live .frost-field {
+    opacity: 1;
+  }
+  .hero--has-youtube.hero--live .hero__steam-cloud,
+  .hero--has-youtube.hero--live .ember,
+  .hero--has-youtube.hero--live .frost,
+  .hero--has-youtube.hero--live .hero__scroll-line {
+    animation-play-state: running;
+  }
+  .hero--has-youtube:not(.hero--live) .hero__content [data-reveal] {
+    opacity: 0;
   }
   .hero--left .hero__overlay {
     background:
