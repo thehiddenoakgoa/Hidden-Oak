@@ -142,6 +142,11 @@ const showHeat = !ice || dual;
   <!-- Golden-hour wash: lifts midtones, keeps edges readable -->
   <div class="hero__grade" aria-hidden="true"></div>
   <div class="hero__overlay" aria-hidden="true"></div>
+  {
+    hasYoutube && (
+      <div class="hero__matte" aria-hidden="true"></div>
+    )
+  }
 
   {
     showHeat && (
@@ -428,6 +433,15 @@ const showHeat = !ice || dual;
         rgba(28, 20, 14, 0.72) 100%
       ),
       radial-gradient(120% 100% at 50% 45%, transparent 40%, rgba(28, 20, 14, 0.28) 100%);
+  }
+  /* Black matte over the YouTube background: soft teaser dim that lifts
+     text and particle effects above the moving footage. */
+  .hero__matte {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: rgba(10, 8, 6, 0.32);
   }
   .hero--left .hero__overlay {
     background:
