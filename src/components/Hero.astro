@@ -261,7 +261,7 @@ const showHeat = !ice || dual;
         started = true;
         setTimeout(function () {
           hero.classList.add('hero--live');
-        }, 2000);
+        }, 500);
       }
 
       window.addEventListener('message', function (e) {
@@ -474,12 +474,12 @@ const showHeat = !ice || dual;
     background: rgba(10, 8, 6, 0.5);
   }
   /* Atmosphere + reveal effects wait until the YouTube hero video starts:
-     JS adds .hero--live ~2s after playback begins. */
+     JS adds .hero--live ~0.5s after playback begins, then everything
+     dissolves in. */
   .hero--has-youtube .hero__steam,
   .hero--has-youtube .ember-field,
   .hero--has-youtube .frost-field {
     opacity: 0;
-    transition: opacity 0.6s var(--ease-out);
   }
   .hero--has-youtube:not(.hero--live) .hero__steam-cloud,
   .hero--has-youtube:not(.hero--live) .ember,
@@ -489,8 +489,12 @@ const showHeat = !ice || dual;
   }
   .hero--has-youtube.hero--live .hero__steam,
   .hero--has-youtube.hero--live .ember-field,
-  .hero--has-youtube.hero--live .frost-field {
-    opacity: 1;
+  .hero--has-youtube.hero--live .frost-field,
+  .hero--has-youtube.hero--live .hero__content [data-reveal] {
+    animation: hero-dissolve 0.9s var(--ease-out) both;
+  }
+  .hero--has-youtube.hero--live .hero__content [data-reveal] {
+    animation-delay: var(--reveal-delay, 0ms);
   }
   .hero--has-youtube.hero--live .hero__steam-cloud,
   .hero--has-youtube.hero--live .ember,
@@ -500,6 +504,18 @@ const showHeat = !ice || dual;
   }
   .hero--has-youtube:not(.hero--live) .hero__content [data-reveal] {
     opacity: 0;
+  }
+  @keyframes hero-dissolve {
+    from {
+      opacity: 0;
+      filter: blur(14px);
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
   }
   .hero--left .hero__overlay {
     background:
@@ -698,5 +714,10 @@ const showHeat = !ice || dual;
     .frost-field,
     .ember-field,
     .hero__steam { display: none; }
+    .hero--has-youtube .hero__content [data-reveal] {
+      opacity: 1;
+      animation: none;
+    }
+    .hero--has-youtube .hero__scroll-line { animation: none; }
   }
 </style>
