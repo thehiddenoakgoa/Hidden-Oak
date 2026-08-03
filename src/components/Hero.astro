@@ -13,6 +13,8 @@ interface Props {
   video?: string;
   /** YouTube watch URL/ID to embed as the hero background (native player chrome) */
   youtube?: string;
+  /** Zoom factor applied to the YouTube embed to crop black bars, e.g. 1.2 */
+  youtubeScale?: number;
   poster?: string;
   image?: string;
   /** CSS object-position for the poster image, e.g. "center 70%" */
@@ -47,6 +49,7 @@ const {
   ice = false,
   dual = true,
   titleNowrap = false,
+  youtubeScale = 1,
 } = Astro.props;
 
 const bgImage = poster || image;
@@ -54,8 +57,7 @@ const hasVideo = Boolean(video);
 const hasYoutube = Boolean(youtube);
 const youtubeId =
   (youtube || '').match(/(?:youtu\.be\/|v=|\/shorts\/|embed\/)([\w-]{11})/)?.[1] ||
-  (youtube || '');
-const showAtm = atmosphere && !bgImage && !hasVideo && !hasYoutube;
+  (youtube || '');const showAtm = atmosphere && !bgImage && !hasVideo && !hasYoutube;
 const showIce = ice || dual;
 const showHeat = !ice || dual;
 ---
@@ -115,6 +117,7 @@ const showHeat = !ice || dual;
           allowfullscreen
           referrerpolicy="strict-origin-when-cross-origin"
           tabindex="-1"
+          style={youtubeScale !== 1 ? `transform: scale(${youtubeScale})` : undefined}
         ></iframe>
       )
     }
