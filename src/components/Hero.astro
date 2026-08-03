@@ -11,8 +11,6 @@ interface Props {
   title: string;
   subtitle?: string;
   video?: string;
-  /** YouTube watch URL/ID to embed as the hero background (native player chrome) */
-  youtube?: string;
   poster?: string;
   image?: string;
   /** CSS object-position for the poster image, e.g. "center 70%" */
@@ -35,7 +33,6 @@ const {
   title,
   subtitle,
   video,
-  youtube,
   poster,
   image,
   posterPosition,
@@ -51,12 +48,7 @@ const {
 
 const bgImage = poster || image;
 const hasVideo = Boolean(video);
-const hasYoutube = Boolean(youtube);
-// Extract the video ID from a watch/shorts/you.be URL, or accept a bare ID.
-const youtubeId =
-  (youtube || '').match(/(?:youtu\.be\/|v=|\/shorts\/|embed\/)([\w-]{11})/)?.[1] ||
-  (youtube || '');
-const showAtm = atmosphere && !bgImage && !hasVideo && !hasYoutube;
+const showAtm = atmosphere && !bgImage && !hasVideo;
 const showIce = ice || dual;
 const showHeat = !ice || dual;
 ---
@@ -68,7 +60,6 @@ const showHeat = !ice || dual;
     {
       'hero--has-video': hasVideo,
       'hero--has-image': Boolean(bgImage),
-      'hero--has-youtube': hasYoutube,
       'hero--compact': compact,
       'hero--atmosphere': showAtm || Boolean(bgImage),
       'hero--ice': ice && !dual,
@@ -103,20 +94,6 @@ const showHeat = !ice || dual;
           fetchpriority="high"
           style={posterPosition ? `object-position: ${posterPosition}` : undefined}
         />
-      )
-    }
-    {
-      hasYoutube && youtubeId && (
-        <iframe
-          class="hero__youtube"
-          src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=1&loop=1&playsinline=1&playlist=${youtubeId}&rel=0`}
-          title={title}
-          loading="eager"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          referrerpolicy="strict-origin-when-cross-origin"
-          tabindex="-1"
-        ></iframe>
       )
     }
     {
@@ -281,14 +258,6 @@ const showHeat = !ice || dual;
     height: 100%;
     object-fit: cover;
     object-position: center 40%;
-  }
-  .hero__youtube {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    border: 0;
   }
   /* Brighter — golden hour before sunset */
   .hero__poster,
