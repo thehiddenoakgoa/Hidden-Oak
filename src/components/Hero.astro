@@ -32,6 +32,8 @@ interface Props {
   ice?: boolean;
   /** Dual heat + ice particles */
   dual?: boolean;
+  /** Show the drifting steam clouds over the media */
+  steam?: boolean;
   /** Keep the title on a single line (white-space: nowrap) */
   titleNowrap?: boolean;
 }
@@ -52,6 +54,7 @@ const {
   atmosphere = true,
   ice = false,
   dual = true,
+  steam = true,
   titleNowrap = false,
   youtubeScale = 1,
   youtubeMobileScale = 1.15,
@@ -169,7 +172,7 @@ const showHeat = !ice || dual;
   }
 
   {
-    showHeat && (
+    showHeat && steam && (
       <div class="hero__steam" aria-hidden="true">
         <span class="hero__steam-cloud hero__steam-cloud--a"></span>
         <span class="hero__steam-cloud hero__steam-cloud--b"></span>
