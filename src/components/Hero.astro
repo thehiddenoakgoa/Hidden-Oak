@@ -278,11 +278,11 @@ const showHeat = !ice || dual;
       var mobileId = iframe.getAttribute('data-youtube-mobile-id');
       if (!desktopId || !mobileId || desktopId === mobileId) return;
 
-      function embed(id) {
+      function embed(id, controls) {
         return (
           'https://www.youtube-nocookie.com/embed/' + id +
-          '?autoplay=1&mute=1&controls=1&loop=1&playsinline=1&playlist=' + id +
-          '&rel=0&enablejsapi=1'
+          '?autoplay=1&mute=1&controls=' + controls + '&loop=1&playsinline=1&playlist=' + id +
+          '&rel=0' + (controls === '0' ? '&modestbranding=1' : '') + '&enablejsapi=1'
         );
       }
 
@@ -290,7 +290,7 @@ const showHeat = !ice || dual;
       function apply() {
         var id = mq.matches ? mobileId : desktopId;
         if (iframe.getAttribute('data-current') === id) return;
-        iframe.src = embed(id);
+        iframe.src = embed(id, mq.matches ? '0' : '1');
         iframe.setAttribute('data-current', id);
       }
       apply();
@@ -336,8 +336,9 @@ const showHeat = !ice || dual;
       radial-gradient(120% 80% at 50% 20%, rgba(255, 176, 96, 0.22), transparent 58%),
       radial-gradient(80% 60% at 85% 90%, rgba(120, 180, 210, 0.12), transparent 50%),
       #2a1f16;
-    min-height: 100svh;
     min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
@@ -737,7 +738,9 @@ const showHeat = !ice || dual;
 
   @media (max-width: 640px) {
     .hero {
+      min-height: 92vh;
       min-height: 92svh;
+      min-height: 92dvh;
       align-items: flex-end;
     }
     .hero--compact {
