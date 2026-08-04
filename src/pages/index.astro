@@ -180,12 +180,16 @@ const reasons = [
 
   {/* Full-bleed visual band */}
   <section class="bleed-band" aria-label="Hidden Oak exterior" data-reveal="fade">
-    <img
-      src="/images/gallery/banner.gif"
-      alt="Hidden Oak mud-and-wood banya at golden hour among palms"
-      loading="lazy"
-      decoding="async"
-    />
+    <video
+      src="/images/gallery/banner.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      aria-hidden="true"
+      tabindex="-1"
+    ></video>
     <div class="bleed-band__veil"></div>
     <div class="bleed-band__copy container">
       <p class="eyebrow" style="color: #ffc9a0;">Golden hour under the palms</p>
@@ -533,7 +537,8 @@ const reasons = [
     overflow: hidden;
     margin-block: var(--space-4);
   }
-  .bleed-band > img {
+  .bleed-band > img,
+  .bleed-band > video {
     position: absolute;
     inset: 0;
     width: 100%;
