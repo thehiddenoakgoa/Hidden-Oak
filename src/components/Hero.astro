@@ -13,8 +13,12 @@ interface Props {
   video?: string;
   /** YouTube watch URL/ID to embed as the hero background (native player chrome) */
   youtube?: string;
+  /** Mobile-only YouTube URL/ID (9:16 portrait) — replaces the desktop video under 640px */
+  youtubeMobile?: string;
   /** Zoom factor applied to the YouTube embed to crop black bars, e.g. 1.2 */
   youtubeScale?: number;
+  /** Zoom factor applied to the mobile YouTube embed under 640px */
+  youtubeMobileScale?: number;
   poster?: string;
   image?: string;
   /** CSS object-position for the poster image, e.g. "center 70%" */
@@ -50,6 +54,8 @@ const {
   dual = true,
   titleNowrap = false,
   youtubeScale = 1,
+  youtubeMobileScale = 1.15,
+  youtubeMobile = '',
 } = Astro.props;
 
 const bgImage = poster || image;
@@ -57,7 +63,10 @@ const hasVideo = Boolean(video);
 const hasYoutube = Boolean(youtube);
 const youtubeId =
   (youtube || '').match(/(?:youtu\.be\/|v=|\/shorts\/|embed\/)([\w-]{11})/)?.[1] ||
-  (youtube || '');const showAtm = atmosphere && !bgImage && !hasVideo && !hasYoutube;
+  (youtube || '');
+const youtubeMobileId =
+  (youtubeMobile || '').match(/(?:youtu\.be\/|v=|\/shorts\/|embed\/)([\w-]{11})/)?.[1] ||
+  (youtubeMobile || '');const showAtm = atmosphere && !bgImage && !hasVideo && !hasYoutube;
 const showIce = ice || dual;
 const showHeat = !ice || dual;
 ---
@@ -70,6 +79,7 @@ const showHeat = !ice || dual;
       'hero--has-video': hasVideo,
       'hero--has-image': Boolean(bgImage),
       'hero--has-youtube': hasYoutube,
+      'hero--youtube-mobile': Boolean(youtubeMobileId),
       'hero--compact': compact,
       'hero--atmosphere': showAtm || Boolean(bgImage),
       'hero--ice': ice && !dual,
@@ -117,7 +127,17 @@ const showHeat = !ice || dual;
           allowfullscreen
           referrerpolicy="strict-origin-when-cross-origin"
           tabindex="-1"
-          style={youtubeScale !== 1 ? `transform: scale(${youtubeScale})` : undefined}
+          data-youtube-id={youtubeId}
+          data-youtube-mobile-id={youtubeMobileId || ''}
+          data-current={youtubeId}
+          style={
+            [
+              youtubeScale !== 1 ? `--youtube-scale: ${youtubeScale}` : '',
+              youtubeMobileId ? `--youtube-scale-mobile: ${youtubeMobileScale}` : '',
+            ]
+              .filter(Boolean)
+              .join(';') || undefined
+          }
         ></iframe>
       )
     }
@@ -254,6 +274,36 @@ const showHeat = !ice || dual;
       if (!hero) return;
       var iframe = hero.querySelector('iframe.hero__youtube');
       if (!iframe) return;
+      var desktopId = iframe.getAttribute('data-youtube-id');
+      var mobileId = iframe.getAttribute('data-youtube-mobile-id');
+      if (!desktopId || !mobileId || desktopId === mobileId) return;
+
+      function embed(id) {
+        return (
+          'https://www.youtube-nocookie.com/embed/' + id +
+          '?autoplay=1&mute=1&controls=1&loop=1&playsinline=1&playlist=' + id +
+          '&rel=0&enablejsapi=1'
+        );
+      }
+
+      var mq = window.matchMedia('(max-width: 640px)');
+      function apply() {
+        var id = mq.matches ? mobileId : desktopId;
+        if (iframe.getAttribute('data-current') === id) return;
+        iframe.src = embed(id);
+        iframe.setAttribute('data-current', id);
+      }
+      apply();
+      mq.addEventListener('change', apply);
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
+      var hero = document.currentScript && document.currentScript.closest('.hero');
+      if (!hero) return;
+      var iframe = hero.querySelector('iframe.hero__youtube');
+      if (!iframe) return;
 
       var started = false;
       function fire() {
@@ -327,6 +377,7 @@ const showHeat = !ice || dual;
     height: 100%;
     border: 0;
     pointer-events: none;
+    transform: scale(var(--youtube-scale, 1));
   }
   .hero--has-youtube .hero__youtube {
     pointer-events: auto;
@@ -691,6 +742,9 @@ const showHeat = !ice || dual;
     }
     .hero--compact {
       min-height: clamp(320px, 48vh, 420px);
+    }
+    .hero--youtube-mobile .hero__youtube {
+      transform: scale(var(--youtube-scale-mobile, 1.15));
     }
     .hero__title {
       font-size: var(--text-3xl);
