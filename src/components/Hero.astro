@@ -40,6 +40,8 @@ interface Props {
   dual?: boolean;
   /** Show the drifting steam clouds over the media */
   steam?: boolean;
+  /** Subtle fireflies drifting and blinking over the media */
+  fireflies?: boolean;
   /** Keep the title on a single line (white-space: nowrap) */
   titleNowrap?: boolean;
 }
@@ -63,6 +65,7 @@ const {
   ice = false,
   dual = true,
   steam = true,
+  fireflies = false,
   titleNowrap = false,
   youtubeScale = 1,
   youtubeMobileScale = 1.15,
@@ -216,6 +219,19 @@ const showHeat = !ice || dual;
           <span
             class="frost"
             style={`left:${left}%; top:${(i % 5) * 12 + 8}%; --frost-dur:${10 + (i % 6)}s; --frost-delay:${i * 0.85}s; --frost-size:${3 + (i % 4)}px;`}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  {
+    fireflies && (
+      <div class="firefly-field" aria-hidden="true">
+        {[12, 28, 44, 62, 78, 88, 20, 55, 70, 36, 8, 48].map((left, i) => (
+          <span
+            class="firefly"
+            style={`left:${left}%; top:${12 + (i % 6) * 13}%; --fly-dur:${16 + (i % 7)}s; --fly-delay:${i * 1.4}s; --blink-dur:${2.6 + (i % 5) * 0.7}s; --tx:${(i % 2 ? -1 : 1) * (4 + (i % 4) * 2)}vw; --ty:${(i % 2 ? 1 : -1) * (2 + (i % 3) * 2)}vh; --fly-size:${3 + (i % 3)}px;`}
           />
         ))}
       </div>
@@ -507,7 +523,8 @@ const showHeat = !ice || dual;
   }
 
   .hero .ember-field,
-  .hero .frost-field { z-index: 3; }
+  .hero .frost-field,
+  .hero .firefly-field { z-index: 3; }
 
   .frost-field {
     position: absolute;
@@ -531,6 +548,37 @@ const showHeat = !ice || dual;
     15%  { opacity: 0.85; }
     70%  { opacity: 0.35; }
     100% { transform: translateY(55vh) translateX(-18px) scale(1.1); opacity: 0; }
+  }
+
+  .firefly-field {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .firefly {
+    position: absolute;
+    width: var(--fly-size, 4px);
+    height: var(--fly-size, 4px);
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff3c4 0%, #ffd166 40%, rgba(255, 200, 80, 0.35) 70%, transparent 100%);
+    box-shadow: 0 0 6px rgba(255, 214, 102, 0.55), 0 0 14px rgba(255, 190, 70, 0.22);
+    opacity: 0.15;
+    will-change: transform, opacity;
+    animation:
+      firefly-wander var(--fly-dur, 20s) var(--ease-in-out) infinite,
+      firefly-blink var(--blink-dur, 3.5s) var(--ease-in-out) infinite;
+    animation-delay: var(--fly-delay, 0s);
+  }
+  @keyframes firefly-wander {
+    0%, 100% { transform: translate(0, 0); }
+    25%  { transform: translate(calc(var(--tx, 4vw) * 0.6), calc(var(--ty, -2vh) * 0.5)); }
+    50%  { transform: translate(var(--tx, 4vw), var(--ty, -2vh)); }
+    75%  { transform: translate(calc(var(--tx, 4vw) * 0.4), calc(var(--ty, -2vh) * -0.4)); }
+  }
+  @keyframes firefly-blink {
+    0%, 100% { opacity: 0.1; }
+    50%  { opacity: 0.8; }
   }
 
   /* Lighter overlays so the photo reads as golden-hour */
@@ -564,18 +612,21 @@ const showHeat = !ice || dual;
      dissolves in. */
   .hero--media-live .hero__steam,
   .hero--media-live .ember-field,
-  .hero--media-live .frost-field {
+  .hero--media-live .frost-field,
+  .hero--media-live .firefly-field {
     opacity: 0;
   }
   .hero--media-live:not(.hero--live) .hero__steam-cloud,
   .hero--media-live:not(.hero--live) .ember,
   .hero--media-live:not(.hero--live) .frost,
+  .hero--media-live:not(.hero--live) .firefly,
   .hero--media-live:not(.hero--live) .hero__scroll-line {
     animation-play-state: paused;
   }
   .hero--media-live.hero--live .hero__steam,
   .hero--media-live.hero--live .ember-field,
   .hero--media-live.hero--live .frost-field,
+  .hero--media-live.hero--live .firefly-field,
   .hero--media-live.hero--live .hero__content [data-reveal] {
     animation: hero-dissolve 0.9s var(--ease-out) both;
   }
@@ -585,6 +636,7 @@ const showHeat = !ice || dual;
   .hero--media-live.hero--live .hero__steam-cloud,
   .hero--media-live.hero--live .ember,
   .hero--media-live.hero--live .frost,
+  .hero--media-live.hero--live .firefly,
   .hero--media-live.hero--live .hero__scroll-line {
     animation-play-state: running;
   }
@@ -804,6 +856,7 @@ const showHeat = !ice || dual;
     .hero__poster--atm { animation: none; }
     .frost-field,
     .ember-field,
+    .firefly-field,
     .hero__steam { display: none; }
     .hero--media-live .hero__content [data-reveal] {
       opacity: 1;
