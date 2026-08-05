@@ -25,6 +25,10 @@ interface Props {
   image?: string;
   /** CSS object-position for the poster image, e.g. "center 70%" */
   posterPosition?: string;
+  /** Black matte over the media for readability (image heroes too) */
+  matte?: boolean;
+  /** Matte opacity (0–1), default 0.34 */
+  matteOpacity?: number;
   primaryCta?: { href: string; label: string };
   secondaryCta?: { href: string; label: string };
   align?: 'left' | 'center';
@@ -49,6 +53,8 @@ const {
   poster,
   image,
   posterPosition,
+  matte = false,
+  matteOpacity = 0.34,
   primaryCta = { href: '/book', label: 'Book a Session' },
   secondaryCta,
   align = 'left',
@@ -171,8 +177,12 @@ const showHeat = !ice || dual;
   <div class="hero__grade" aria-hidden="true"></div>
   <div class="hero__overlay" aria-hidden="true"></div>
   {
-    (hasYoutube || hasVideo) && (
-      <div class="hero__matte" aria-hidden="true"></div>
+    (hasYoutube || hasVideo || matte) && (
+      <div
+        class="hero__matte"
+        style={matte ? `opacity: ${matteOpacity}` : undefined}
+        aria-hidden="true"
+      ></div>
     )
   }
 
@@ -546,7 +556,8 @@ const showHeat = !ice || dual;
     inset: 0;
     z-index: 3;
     pointer-events: none;
-    background: rgba(10, 8, 6, 0.34);
+    background: #0a0806;
+    opacity: 0.34;
   }
   /* Atmosphere + reveal effects wait until the YouTube hero video starts:
      JS adds .hero--live ~0.5s after playback begins, then everything
