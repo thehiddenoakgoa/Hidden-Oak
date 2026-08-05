@@ -274,6 +274,9 @@ const showHeat = !ice || dual;
       if (prefersReduced) {
         video.pause();
         video.removeAttribute('autoplay');
+      } else {
+        video.muted = true;
+        video.play().catch(function () {});
       }
       window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', function (e) {
         if (e.matches) {
