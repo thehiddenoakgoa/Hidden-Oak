@@ -319,6 +319,8 @@ const showHeat = !ice || dual;
         }
       }
       attemptPlay();
+      video.addEventListener('canplay', attemptPlay);
+      video.addEventListener('loadedmetadata', attemptPlay);
       window.addEventListener('pageshow', attemptPlay);
       window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', function (e) {
         if (e.matches) {

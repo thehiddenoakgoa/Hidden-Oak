@@ -183,11 +183,16 @@ const reasons = [
   {/* Full-bleed visual band */}
   <section class="bleed-band" aria-label="Hidden Oak exterior" data-reveal="fade">
     <video
-      src="/images/gallery/banner.mp4"
+      src="/images/gallery/banner-lite.mp4"
       autoplay
       muted
       loop
       playsinline
+      webkit-playsinline
+      x5-playsinline
+      x5-video-player-type="h5"
+      disablepictureinpicture
+      disableremoteplayback
       preload="auto"
       aria-hidden="true"
       tabindex="-1"
@@ -199,6 +204,33 @@ const reasons = [
       <a class="text-link text-link--light" href="/gallery">Walk the gallery <span aria-hidden="true">↗</span></a>
     </div>
   </section>
+  <script is:inline>
+    (function () {
+      var video = document.querySelector('.bleed-band video');
+      if (!video) return;
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+      function attemptPlay() {
+        var p = video.play();
+        if (p && p.catch) {
+          p.catch(function () {
+            var retry = function () {
+              video.muted = true;
+              video.play().catch(function () {});
+              document.removeEventListener('pointerdown', retry);
+              document.removeEventListener('scroll', retry);
+            };
+            document.addEventListener('pointerdown', retry, { once: true });
+            document.addEventListener('scroll', retry, { once: true });
+          });
+        }
+      }
+      attemptPlay();
+      video.addEventListener('canplay', attemptPlay);
+      window.addEventListener('pageshow', attemptPlay);
+    })();
+  </script>
 
   {/* Place mosaic */}
   <section class="section place-section" data-reveal>
