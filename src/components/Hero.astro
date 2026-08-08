@@ -165,6 +165,11 @@ const showHeat = !ice || dual;
           muted
           loop
           playsinline
+          webkit-playsinline
+          x5-playsinline
+          x5-video-player-type="h5"
+          disablepictureinpicture
+          disableremoteplayback
           preload="auto"
           poster={bgImage || undefined}
           tabindex="-1"
@@ -284,31 +289,42 @@ const showHeat = !ice || dual;
 
   <script is:inline>
     (function () {
-      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var hero = document.currentScript && document.currentScript.closest('.hero');
       var video = hero && hero.querySelector('video.hero__video');
       if (!video) return;
-      video.addEventListener('playing', function () {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+      function markLive() {
         hero.classList.add('hero--live');
-      });
-      video.addEventListener('loadeddata', function () {
-        hero.classList.add('hero--live');
-      });
-      setTimeout(function () {
-        hero.classList.add('hero--live');
-      }, 4000);
-      if (prefersReduced) {
-        video.pause();
-        video.removeAttribute('autoplay');
-      } else {
-        video.muted = true;
-        video.play().catch(function () {});
       }
+      video.addEventListener('playing', markLive);
+      video.addEventListener('loadeddata', markLive);
+      setTimeout(markLive, 4000);
+      function attemptPlay() {
+        var p = video.play();
+        if (p && p.catch) {
+          p.catch(function () {
+            // Autoplay blocked (mobile data-saver / low-power / policies):
+            // retry on the first tap or scroll anywhere on the hero.
+            var retry = function () {
+              video.muted = true;
+              video.play().catch(function () {});
+              hero.removeEventListener('pointerdown', retry);
+              document.removeEventListener('scroll', retry);
+            };
+            hero.addEventListener('pointerdown', retry, { once: true });
+            document.addEventListener('scroll', retry, { once: true });
+          });
+        }
+      }
+      attemptPlay();
+      window.addEventListener('pageshow', attemptPlay);
       window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', function (e) {
         if (e.matches) {
           video.pause();
         } else {
-          video.play().catch(function () {});
+          attemptPlay();
         }
       });
     })();
