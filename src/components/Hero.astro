@@ -173,10 +173,9 @@ const showHeat = !ice || dual;
           preload="auto"
           poster={bgImage || undefined}
           tabindex="-1"
-        >
-          {videoMobile && <source src={videoMobile} type="video/mp4" media="(max-width: 640px)" />}
-          <source src={video} type="video/mp4" />
-        </video>
+          data-video={video}
+          data-video-mobile={videoMobile || video}
+        ></video>
       )
     }
   </div>
@@ -301,6 +300,21 @@ const showHeat = !ice || dual;
       video.addEventListener('playing', markLive);
       video.addEventListener('loadeddata', markLive);
       setTimeout(markLive, 4000);
+      var desktopSrc = video.getAttribute('data-video');
+      var mobileSrc = video.getAttribute('data-video-mobile');
+      var mq = window.matchMedia('(max-width: 640px)');
+      function applySource() {
+        var src = mq.matches ? mobileSrc : desktopSrc;
+        if (video.getAttribute('src') !== src) {
+          video.setAttribute('src', src);
+          video.load();
+        }
+      }
+      applySource();
+      mq.addEventListener('change', function () {
+        applySource();
+        attemptPlay();
+      });
       function attemptPlay() {
         var p = video.play();
         if (p && p.catch) {
