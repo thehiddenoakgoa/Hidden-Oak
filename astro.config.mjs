@@ -10,8 +10,8 @@ export default defineConfig({
   output: 'static',
   integrations: [
     sitemap({
-      // Style guide is internal-only — exclude from public sitemap
-      filter: (page) => !page.includes('/style-guide'),
+      // Internal-only pages — exclude from public sitemap
+      filter: (page) => !page.includes('/style-guide') && !page.includes('/admin/'),
     }),
   ],
   // Inline small stylesheets to eliminate render-blocking CSS requests

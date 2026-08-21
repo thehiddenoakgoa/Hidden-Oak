@@ -1,0 +1,598 @@
+---
+/**
+ * BookingForm — native replacement for Cal.com embed.
+ * Matches Hidden Oak earthy tokens, no external JS.
+ * Posts to POST /api/bookings (Pages Function) -> Brevo -> thehiddenoak.goa@gmail.com
+ * Cash on arrival only.
+ */
+interface Props { class?: string; }
+
+const { class: className = '' } = Astro.props;
+
+const services = [
+  {
+    id: 'without_ice' as const,
+    name: 'Without Ice Bath',
+    price: '₹1,000',
+    duration: '~75 min · 3 hours access',
+    icon: 'flame',
+    note: 'Full banya cycle without the plunge.',
+    features: ['Sauna & steam', 'Two–three heat rounds', 'Shower & tea included'],
+  },
+  {
+    id: 'contrast_sound' as const,
+    name: 'Contrast Therapy & Sound Healing',
+    price: '₹1,500',
+    duration: '~90 min · 3 hours access',
+    icon: 'snowflake',
+    note: 'Heat, cold & sound together.',
+    features: ['Everything in base', 'Cold plunge between rounds', 'Sound healing'],
+    featured: true,
+  },
+];
+---
+
+<div class:list={['booking-form-shell', className]} data-booking-form>
+  <!-- Stepper hint -->
+  <div class="bf-steps" aria-hidden="true">
+    <span class="bf-steps__item is-active">Service</span>
+    <span class="bf-steps__sep">·</span>
+    <span class="bf-steps__item">Date & Time</span>
+    <span class="bf-steps__sep">·</span>
+    <span class="bf-steps__item">Details</span>
+  </div>
+
+  <form class="bf" id="booking-form" novalidate>
+    <!-- Honeypot -->
+    <div class="bf__honeypot" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;">
+      <label>Leave empty: <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <!-- 1. Service -->
+    <fieldset class="bf__section bf__section--service" data-reveal>
+      <legend class="bf__legend"><span class="eyebrow">Step 1</span><h2>Choose your session</h2></legend>
+      <p class="bf__hint">Both include sauna, steam & rest. Difference is the ice bath.</p>
+      <div class="bf-services">
+        {services.map((s) => (
+          <label class:list={['bf-service', { 'bf-service--featured': s.featured }]}>
+            <input type="radio" name="service" value={s.id} required checked={s.featured ? true : undefined} />
+            {s.featured && <span class="bf-service__badge">Most popular</span>}
+            <span class:list={['deco-icon', 'deco-icon--md', `deco-icon--${s.icon}`]} aria-hidden="true"></span>
+            <span class="bf-service__name">{s.name}</span>
+            <span class="bf-service__price">{s.price}<span> / session</span></span>
+            <span class="bf-service__duration">{s.duration}</span>
+            <ul class="bf-service__features">
+              {s.features.map((f) => <li>{f}</li>)}
+            </ul>
+            <span class="bf-service__note">{s.note}</span>
+            <span class="bf-service__check" aria-hidden="true"></span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <!-- 2. Date & Slot -->
+    <fieldset class="bf__section bf__section--datetime" data-reveal>
+      <legend class="bf__legend"><span class="eyebrow">Step 2</span><h2>Pick date & time</h2></legend>
+      <p class="bf__hint">Open daily 6 PM – midnight · 90-min slots · Cash on arrival</p>
+
+      <div class="bf-datetime">
+        <!-- Calendar -->
+        <div class="bf-calendar" id="bf-calendar">
+          <div class="bf-calendar__head">
+            <button type="button" class="bf-calendar__nav" id="cal-prev" aria-label="Previous month">‹</button>
+            <span class="bf-calendar__title" id="cal-title"></span>
+            <button type="button" class="bf-calendar__nav" id="cal-next" aria-label="Next month">›</button>
+          </div>
+          <div class="bf-calendar__weekdays" aria-hidden="true">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+          <div class="bf-calendar__grid" id="cal-grid" role="grid"></div>
+          <p class="bf-calendar__note">IST (Asia/Kolkata) · Select a date to see time slots</p>
+        </div>
+
+        <!-- Slots -->
+        <div class="bf-slots-wrap" id="bf-slots-wrap">
+          <p class="bf-slots__label">Available times <span id="bf-slots-date">— pick a date —</span></p>
+          <div class="bf-slots" id="bf-slots" role="radiogroup" aria-label="Time slots">
+            <!-- injected by JS -->
+            <p class="bf-slots__empty">Choose a date first.</p>
+          </div>
+          <input type="hidden" name="date" id="bf-date-input" required />
+          <input type="hidden" name="slot" id="bf-slot-input" required />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- 3. Guests -->
+    <fieldset class="bf__section" data-reveal>
+      <legend class="bf__legend"><span class="eyebrow">Step 3</span><h2>Guests</h2></legend>
+      <label class="bf-field bf-field--inline">
+        <span class="bf-field__label">Number of guests <span class="bf-field__req">*</span></span>
+        <select name="guests" id="bf-guests" required>
+          <option value="1">1 guest</option>
+          <option value="2">2 guests</option>
+          <option value="3">3 guests</option>
+          <option value="4">4 guests</option>
+          <option value="5">5 guests</option>
+          <option value="6">6 guests</option>
+        </select>
+      </label>
+      <p class="bf__hint">Capacity per slot is limited. We’ll hold spots for your group and confirm by email.</p>
+    </fieldset>
+
+    <!-- 4. Details -->
+    <fieldset class="bf__section bf__section--details" data-reveal>
+      <legend class="bf__legend"><span class="eyebrow">Step 4</span><h2>Your details</h2></legend>
+      <div class="bf-row">
+        <label class="bf-field">
+          <span class="bf-field__label">Full name <span class="bf-field__req">*</span></span>
+          <input type="text" name="name" required autocomplete="name" placeholder="Your name" />
+        </label>
+        <label class="bf-field">
+          <span class="bf-field__label">Email <span class="bf-field__req">*</span></span>
+          <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+        </label>
+      </div>
+      <label class="bf-field">
+        <span class="bf-field__label">Phone / WhatsApp <span class="bf-field__opt">(recommended)</span></span>
+        <input type="tel" name="phone" autocomplete="tel" placeholder="+91 ..." />
+      </label>
+      <label class="bf-field">
+        <span class="bf-field__label">Notes <span class="bf-field__opt">(optional)</span></span>
+        <textarea name="notes" rows="3" placeholder="Anything we should know? First time, group booking, health notes..."></textarea>
+      </label>
+
+      <div class="bf-cash">
+        <span class="deco-icon deco-icon--sm deco-icon--branch" aria-hidden="true"></span>
+        <div>
+          <strong>Cash on arrival — no online payment.</strong>
+          <span>Pay at the banya. Free cancellation up to 24 hours before your slot.</span>
+        </div>
+      </div>
+
+      <div class="bf-actions">
+        <button type="submit" class="bf-submit cta cta--primary cta--lg" id="bf-submit">
+          <span class="cta__shine" aria-hidden="true"></span>
+          <span class="bf-submit__label">Confirm booking →</span>
+        </button>
+        <p class="bf-actions__note">You’ll get a confirmation email. Reply to reschedule any time — or <a href="https://wa.me/919818083992" target="_blank" rel="noopener">WhatsApp us</a>.</p>
+      </div>
+
+      <div class="bf-status" id="bf-status" role="status" aria-live="polite" hidden></div>
+    </fieldset>
+  </form>
+
+  <!-- Success -->
+  <div class="bf-success" id="bf-success" hidden>
+    <span class="bf-success__icon" aria-hidden="true">✓</span>
+    <h3>Booking received.</h3>
+    <p id="bf-success-msg">We’ve saved your slot. Check your email for confirmation — and pay cash when you arrive.</p>
+    <p class="bf-success__id">Booking ID: <span id="bf-success-id"></span></p>
+    <div class="bf-success__actions">
+      <a href="/" class="cta cta--ghost cta--md">Back to home</a>
+      <a href="https://wa.me/919818083992" target="_blank" rel="noopener" class="cta cta--primary cta--md"><span class="cta__shine" aria-hidden="true"></span><span class="cta__label">Message on WhatsApp</span></a>
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const form = document.getElementById('booking-form');
+    const statusEl = document.getElementById('bf-status');
+    const successEl = document.getElementById('bf-success');
+    const successId = document.getElementById('bf-success-id');
+    const successMsg = document.getElementById('bf-success-msg');
+    const submitBtn = document.getElementById('bf-submit');
+    const dateInput = document.getElementById('bf-date-input');
+    const slotInput = document.getElementById('bf-slot-input');
+    const slotsWrap = document.getElementById('bf-slots');
+    const slotsDate = document.getElementById('bf-slots-date');
+    const calGrid = document.getElementById('cal-grid');
+    const calTitle = document.getElementById('cal-title');
+    const calPrev = document.getElementById('cal-prev');
+    const calNext = document.getElementById('cal-next');
+    const guestsSel = document.getElementById('bf-guests');
+    if (!form || !calGrid || !calTitle || !dateInput || !slotInput || !slotsWrap || !slotsDate) return;
+
+    // IST helpers
+    const todayISTStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+    let view = new Date(todayISTStr + 'T12:00:00');
+    let selectedDate = null;
+    let selectedSlot = null;
+
+    const SLOT_META = [
+      { v: '18:00', label: '06:00 PM' },
+      { v: '19:30', label: '07:30 PM' },
+      { v: '21:00', label: '09:00 PM' },
+      { v: '22:30', label: '10:30 PM' },
+    ];
+
+    function fmtMonth(d) {
+      return d.toLocaleDateString('en-IN', { month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' });
+    }
+    function toISO(d) {
+      const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${day}`;
+    }
+    function setStatus(msg, ok) {
+      if (!statusEl) return;
+      statusEl.hidden = false;
+      statusEl.textContent = msg;
+      statusEl.className = 'bf-status' + (ok ? ' bf-status--ok' : ' bf-status--err');
+    }
+    function setBtn(label, disabled) {
+      const lbl = submitBtn ? submitBtn.querySelector('.bf-submit__label') : null;
+      if (lbl) lbl.textContent = label;
+      if (submitBtn) submitBtn.disabled = !!disabled;
+    }
+
+    // Calendar render
+    function renderCalendar() {
+      if (!calGrid || !calTitle) return;
+      calTitle.textContent = fmtMonth(view);
+      calGrid.innerHTML = '';
+      const y = view.getFullYear(), m = view.getMonth();
+      const first = new Date(y, m, 1);
+      const startDay = (first.getDay() + 6) % 7; // Mon=0
+      const daysInMonth = new Date(y, m+1, 0).getDate();
+      const prevDays = new Date(y, m, 0).getDate();
+
+      // blank + prev month tail (disabled)
+      for (let i = 0; i < startDay; i++) {
+        const dayNum = prevDays - startDay + 1 + i;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bf-cal__day is-muted';
+        btn.textContent = String(dayNum);
+        btn.disabled = true;
+        btn.tabIndex = -1;
+        btn.setAttribute('aria-disabled','true');
+        calGrid.appendChild(btn);
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isPast = iso < todayISTStr;
+        const isSelected = iso === selectedDate;
+        const isToday = iso === todayISTStr;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bf-cal__day' + (isPast ? ' is-past' : '') + (isSelected ? ' is-selected' : '') + (isToday ? ' is-today' : '');
+        btn.textContent = String(d);
+        btn.setAttribute('role','gridcell');
+        btn.setAttribute('aria-selected', String(isSelected));
+        if (isPast) {
+          btn.disabled = true;
+          btn.title = 'Past dates unavailable';
+        } else {
+          btn.addEventListener('click', () => selectDate(iso));
+        }
+        calGrid.appendChild(btn);
+      }
+      // trailing
+      const total = startDay + daysInMonth;
+      const rem = (7 - (total % 7)) % 7;
+      for (let i=1;i<=rem;i++) {
+        const btn = document.createElement('button');
+        btn.type='button'; btn.className='bf-cal__day is-muted'; btn.textContent=String(i); btn.disabled=true; btn.tabIndex=-1;
+        calGrid.appendChild(btn);
+      }
+    }
+
+    async function selectDate(iso) {
+      selectedDate = iso;
+      selectedSlot = null;
+      if (dateInput) dateInput.value = iso;
+      if (slotInput) slotInput.value = '';
+      if (slotsDate) slotsDate.textContent = iso;
+      renderCalendar();
+      await loadSlots(iso);
+    }
+
+    async function loadSlots(iso) {
+      if (!slotsWrap) return;
+      slotsWrap.innerHTML = '<p class="bf-slots__loading"><span class="bf-spinner"></span> Checking availability…</p>';
+      try {
+        const guests = parseInt(guestsSel ? guestsSel.value : '1',10) || 1;
+        const res = await fetch(`/api/bookings/availability?date=${encodeURIComponent(iso)}`);
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to load slots');
+        renderSlots(data.slots, guests);
+      } catch (e) {
+        slotsWrap.innerHTML = `<p class="bf-slots__empty bf-status--err">Could not load slots. Please try again or <a href="https://wa.me/919818083992" target="_blank">WhatsApp us</a>.</p>`;
+      }
+    }
+
+    function renderSlots(slots, guests) {
+      if (!slotsWrap) return;
+      slotsWrap.innerHTML = '';
+      const wrap = document.createElement('div');
+      wrap.className = 'bf-slots__grid';
+      let hasAvailable = false;
+      slots.forEach((s) => {
+        const enough = s.remaining >= guests;
+        const label = `${s.label} · ${s.remaining} left`;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bf-slot' + (s.full || !enough ? ' is-disabled' : '') + (selectedSlot === s.slot ? ' is-selected' : '');
+        btn.setAttribute('role','radio');
+        btn.setAttribute('aria-checked', String(selectedSlot===s.slot));
+        if (s.full || !enough) {
+          btn.disabled = true;
+          btn.title = s.full ? 'Full — try another time' : `Only ${s.remaining} left, need ${guests}`;
+        } else {
+          hasAvailable = true;
+          btn.addEventListener('click', () => {
+            selectedSlot = s.slot;
+            if (slotInput) slotInput.value = s.slot;
+            // re-render selection
+            wrap.querySelectorAll('.bf-slot').forEach(el=>{ el.classList.remove('is-selected'); el.setAttribute('aria-checked','false'); });
+            btn.classList.add('is-selected');
+            btn.setAttribute('aria-checked','true');
+          });
+        }
+        btn.innerHTML = `<span class="bf-slot__time">${s.label}</span><span class="bf-slot__meta">${s.full ? 'Full' : s.remaining + ' spots · ' + s.taken + '/' + s.capacity}</span>`;
+        wrap.appendChild(btn);
+      });
+      slotsWrap.appendChild(wrap);
+      if (!hasAvailable) {
+        const p = document.createElement('p');
+        p.className = 'bf-slots__empty';
+        p.textContent = 'No spots left for this date. Try another day or WhatsApp us.';
+        slotsWrap.appendChild(p);
+      }
+    }
+
+    // Guests change re-renders slots to reflect needed capacity
+    if (guestsSel) {
+      guestsSel.addEventListener('change', () => {
+        if (selectedDate) loadSlots(selectedDate);
+      });
+    }
+
+    if (calPrev) calPrev.addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth()-1, 1); renderCalendar(); });
+    if (calNext) calNext.addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth()+1, 1); renderCalendar(); });
+
+    renderCalendar();
+    // Auto-select today if available
+    // Wait a tick to allow initial render
+    setTimeout(() => {
+      // Don't auto-select past; but today is default
+      // Let user click. Optionally pre-select tomorrow if today slots may be closing soon.
+    }, 100);
+
+    // Form submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      if (fd.get('website')) {
+        // honeypot
+        setStatus('Thank you — your booking has been received.', true);
+        return;
+      }
+      const name = String(fd.get('name')||'').trim();
+      const email = String(fd.get('email')||'').trim();
+      const service = String(fd.get('service')||'');
+      const date = String(fd.get('date')||'');
+      const slot = String(fd.get('slot')||'');
+      const guests = String(fd.get('guests')||'1');
+
+      if (!service) { setStatus('Please choose a session.', false); return; }
+      if (!date) { setStatus('Please pick a date.', false); return; }
+      if (!slot) { setStatus('Please pick a time slot.', false); return; }
+      if (!name || !email) { setStatus('Name and email are required.', false); return; }
+
+      setBtn('Booking…', true);
+      if (statusEl) statusEl.hidden = true;
+
+      try {
+        const res = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: fd.get('name'),
+            email: fd.get('email'),
+            phone: fd.get('phone'),
+            service: fd.get('service'),
+            date: fd.get('date'),
+            slot: fd.get('slot'),
+            guests: parseInt(String(fd.get('guests')),10) || 1,
+            notes: fd.get('notes'),
+            website: fd.get('website'),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          const msg = data.error || 'Something went wrong. Please try again or WhatsApp us.';
+          setStatus(msg, false);
+          setBtn('Confirm booking →', false);
+          return;
+        }
+        // success
+        form.hidden = true;
+        const shell = document.querySelector('[data-booking-form]');
+        if (shell) shell.classList.add('is-success');
+        if (successEl) successEl.hidden = false;
+        if (successId) successId.textContent = data.id || data.booking?.id || '';
+        if (successMsg) successMsg.textContent = `We’ve reserved ${data.booking?.service_label || ''} on ${data.booking?.date || date} at ${data.booking?.slot || slot}. Check your email — pay cash on arrival.`;
+        window.scrollTo({ top: successEl ? successEl.offsetTop - 80 : 0, behavior: 'smooth' });
+      } catch (err) {
+        setStatus('Network error. Please try again or WhatsApp us directly.', false);
+      } finally {
+        setBtn('Confirm booking →', false);
+      }
+    });
+  })();
+</script>
+
+<style>
+  .booking-form-shell { display: flex; flex-direction: column; gap: var(--space-4); }
+  .booking-form-shell.is-success .bf { display: none; }
+  .bf-steps {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    background: rgba(255,255,255,0.55);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--color-ink-subtle);
+    align-self: flex-start;
+  }
+  .bf-steps__item.is-active { color: var(--forest-deep); }
+  .bf-steps__sep { opacity: 0.4; }
+
+  .bf { display: flex; flex-direction: column; gap: var(--space-6); }
+
+  .bf__section {
+    border: 1px solid var(--color-border);
+    background: rgba(255,250,242,0.55);
+    backdrop-filter: blur(14px);
+    border-radius: var(--radius-xl);
+    padding: var(--space-4) var(--space-4) var(--space-5);
+    box-shadow: var(--shadow-sm);
+  }
+  .bf__legend { display:flex; flex-direction:column; gap:0.25rem; margin-bottom: var(--space-3); border:0; padding:0; width:100%; }
+  .bf__legend h2 { font-size: var(--text-xl); color: var(--forest-deep); }
+  .bf__hint { font-size: var(--text-sm); color: var(--color-ink-subtle); margin-bottom: var(--space-3); line-height: var(--leading-normal); }
+
+  /* Service cards - reuse pricing aesthetics */
+  .bf-services { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+  .bf-service {
+    position: relative; display:flex; flex-direction:column; gap: var(--space-2);
+    padding: var(--space-4); background: var(--color-bg-elevated);
+    border: 2px solid var(--color-border); border-radius: var(--radius-xl);
+    cursor: pointer; transition: border-color var(--duration-fast) var(--ease-soft), box-shadow var(--duration-fast) var(--ease-soft), transform var(--duration-fast) var(--ease-spring);
+  }
+  .bf-service:hover { border-color: var(--color-border-strong); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .bf-service:has(input:checked) { border-color: var(--clay-terracotta); box-shadow: var(--shadow-glow), var(--shadow-md); }
+  .bf-service--featured { border-color: rgba(196,106,40,0.35); }
+  .bf-service input { position:absolute; opacity:0; pointer-events:none; }
+  .bf-service__badge {
+    position:absolute; top: -10px; left: var(--space-4);
+    background: var(--clay-deep); color: #fff; font-size: var(--text-xs); font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-wide); text-transform: uppercase; padding: 2px 10px; border-radius: var(--radius-pill);
+  }
+  .bf-service__name { font-family: var(--font-serif); font-size: var(--text-lg); font-weight: var(--weight-semibold); color: var(--forest-deep); line-height: var(--leading-snug); }
+  .bf-service__price { font-family: var(--font-serif); font-size: var(--text-xl); font-weight: var(--weight-bold); color: var(--forest-deep); }
+  .bf-service__price span { font-family: var(--font-sans); font-size: var(--text-sm); font-weight: var(--weight-regular); color: var(--color-ink-subtle); }
+  .bf-service__duration { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--hot-coal-bright); font-weight: var(--weight-semibold); padding-bottom: var(--space-2); border-bottom: 1px solid var(--color-border); }
+  .bf-service--featured .bf-service__duration { color: var(--ice-deep); }
+  .bf-service__features { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem; flex:1; }
+  .bf-service__features li { position:relative; padding-left:1.3rem; font-size: var(--text-sm); color: var(--color-ink-muted); line-height:1.4; }
+  .bf-service__features li::before { content:'✓'; position:absolute; left:0; color:#7a9a6e; font-weight:bold; }
+  .bf-service__note { font-size: var(--text-sm); color: var(--color-ink-subtle); font-style: italic; margin-top: auto; }
+  .bf-service__check { position:absolute; top: var(--space-3); right: var(--space-3); width:22px; height:22px; border-radius:50%; border:2px solid var(--color-border-strong); display:grid; place-items:center; color: transparent; }
+  .bf-service:has(input:checked) .bf-service__check { background: var(--clay-terracotta); border-color: var(--clay-terracotta); color:#fff; }
+  .bf-service:has(input:checked) .bf-service__check::after { content:'✓'; font-size:12px; line-height:1; }
+
+  /* Datetime */
+  .bf-datetime { display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); align-items: start; }
+  .bf-calendar {
+    background: #fff; border:1px solid var(--color-border-strong); border-radius: var(--radius-lg); padding: var(--space-3);
+    box-shadow: var(--shadow-xs);
+  }
+  .bf-calendar__head { display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-2); }
+  .bf-calendar__title { font-family: var(--font-serif); font-weight: var(--weight-semibold); color: var(--forest-deep); }
+  .bf-calendar__nav {
+    width:36px; height:36px; border-radius: var(--radius-md); border:1px solid var(--color-border);
+    background: var(--color-bg-elevated); color: var(--forest-deep); font-size: 18px; line-height:1;
+    display:grid; place-items:center; cursor:pointer;
+  }
+  .bf-calendar__nav:hover { border-color: var(--clay-terracotta); color: var(--clay-deep); }
+  .bf-calendar__weekdays { display:grid; grid-template-columns: repeat(7,1fr); gap:0; margin-bottom: var(--space-1); }
+  .bf-calendar__weekdays span { text-align:center; font-size: var(--text-xs); color: var(--color-ink-subtle); font-weight: var(--weight-semibold); padding: 4px 0; }
+  .bf-calendar__grid { display:grid; grid-template-columns: repeat(7,1fr); gap:6px; }
+  .bf-cal__day {
+    aspect-ratio:1; display:grid; place-items:center; border-radius: var(--radius-md);
+    border:1px solid transparent; background: transparent; color: var(--color-ink); font-size: var(--text-sm); font-weight: var(--weight-medium);
+    cursor: pointer; transition: background var(--duration-fast) var(--ease-soft), border-color var(--duration-fast) var(--ease-soft), color var(--duration-fast) var(--ease-soft);
+  }
+  .bf-cal__day:hover:not(:disabled) { background: rgba(196,106,40,0.08); border-color: rgba(196,106,40,0.25); }
+  .bf-cal__day.is-today { border-color: var(--ice-mid); background: rgba(126,182,212,0.12); }
+  .bf-cal__day.is-selected { background: var(--clay-terracotta) !important; color:#fff !important; border-color: var(--clay-terracotta) !important; font-weight: var(--weight-bold); }
+  .bf-cal__day.is-past, .bf-cal__day.is-muted { color: var(--color-ink-subtle); opacity:0.45; background: var(--color-bg-muted); cursor:not-allowed; }
+  .bf-calendar__note { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--color-ink-subtle); text-align:center; }
+
+  .bf-slots-wrap { background: #fff; border:1px solid var(--color-border-strong); border-radius: var(--radius-lg); padding: var(--space-3); min-height: 260px; }
+  .bf-slots__label { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--forest-deep); margin-bottom: var(--space-3); }
+  .bf-slots__label span { font-weight: var(--weight-regular); color: var(--color-ink-muted); font-family: var(--font-mono); font-size: var(--text-xs); }
+  .bf-slots { display:flex; flex-direction:column; gap: var(--space-2); }
+  .bf-slots__grid { display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  .bf-slots__empty, .bf-slots__loading { font-size: var(--text-sm); color: var(--color-ink-subtle); padding: var(--space-3); text-align:center; background: var(--color-bg-muted); border-radius: var(--radius-md); }
+  .bf-spinner { display:inline-block; width:16px; height:16px; border:2px solid var(--color-border); border-top-color: var(--clay-terracotta); border-radius:50%; animation: bf-spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes bf-spin { to { transform: rotate(360deg); } }
+  .bf-slot {
+    display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+    padding: var(--space-2) var(--space-3); border-radius: var(--radius-md);
+    border:1.5px solid var(--color-border-strong); background: var(--color-bg-elevated);
+    cursor:pointer; text-align:left; transition: all var(--duration-fast) var(--ease-soft);
+  }
+  .bf-slot:hover:not(:disabled) { border-color: var(--clay-terracotta); background: rgba(196,106,40,0.06); }
+  .bf-slot.is-selected { border-color: var(--clay-terracotta) !important; background: var(--clay-terracotta) !important; color:#fff !important; box-shadow: var(--shadow-sm); }
+  .bf-slot.is-selected .bf-slot__meta { color: rgba(255,255,255,0.9) !important; }
+  .bf-slot.is-disabled { opacity:0.55; cursor:not-allowed; background: var(--color-bg-muted); }
+  .bf-slot__time { font-weight: var(--weight-semibold); font-size: var(--text-sm); }
+  .bf-slot__meta { font-size: var(--text-xs); color: var(--color-ink-subtle); font-family: var(--font-mono); }
+
+  /* Fields */
+  .bf-row { display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+  .bf-field { display:flex; flex-direction:column; gap: var(--space-1); margin-bottom: var(--space-3); }
+  .bf-field--inline { max-width: 280px; }
+  .bf-field__label { font-size: var(--text-sm); color: var(--forest-deep); font-weight: var(--weight-medium); }
+  .bf-field__req { color: var(--hot-coal-bright); }
+  .bf-field__opt { color: var(--color-ink-subtle); font-weight: var(--weight-regular); }
+  .bf-field input, .bf-field select, .bf-field textarea {
+    font: inherit; width:100%; padding: var(--space-2) var(--space-3);
+    background:#fff; color: var(--color-ink); border:1px solid var(--color-border-strong); border-radius: var(--radius-md);
+    transition: border-color var(--duration-fast) var(--ease-soft), box-shadow var(--duration-fast) var(--ease-soft);
+  }
+  .bf-field input::placeholder, .bf-field textarea::placeholder { color: var(--color-ink-subtle); }
+  .bf-field input:focus, .bf-field select:focus, .bf-field textarea:focus {
+    outline:none; border-color: var(--clay-terracotta); box-shadow: 0 0 0 3px rgba(196,106,40,0.18);
+  }
+  .bf-field textarea { resize: vertical; min-height: 90px; }
+
+  .bf-cash {
+    display:flex; gap: var(--space-2); align-items:flex-start;
+    padding: var(--space-3) var(--space-4); background: rgba(111,138,90,0.10);
+    border:1px solid rgba(111,138,90,0.22); border-radius: var(--radius-md); color: var(--forest-deep);
+    font-size: var(--text-sm); line-height: var(--leading-normal);
+  }
+  .bf-cash strong { display:block; font-size: var(--text-sm); }
+  .bf-cash span { color: var(--color-ink-muted); display:block; margin-top: 2px; }
+
+  .bf-actions { display:flex; flex-wrap:wrap; align-items:center; gap: var(--space-3); margin-top: var(--space-2); }
+  .bf-actions__note { font-size: var(--text-xs); color: var(--color-ink-subtle); }
+  .bf-submit { min-width: 220px; }
+  .bf-submit:disabled { opacity:0.6; cursor:not-allowed; transform:none !important; }
+  .bf-status { padding: var(--space-3); border-radius: var(--radius-md); font-size: var(--text-sm); margin-top: var(--space-2); }
+  .bf-status--ok { background: rgba(111,138,90,0.15); border:1px solid var(--forest-light); color: var(--forest-deep); }
+  .bf-status--err { background: rgba(196,69,43,0.12); border:1px solid var(--color-danger); color: var(--color-danger); }
+
+  .bf-success {
+    text-align:center; padding: var(--space-6) var(--space-4);
+    background: rgba(255,250,242,0.85); border:1px solid var(--color-border);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow-md);
+  }
+  .bf-success__icon {
+    width:56px; height:56px; border-radius:50%; background: var(--forest-light); color:#fff;
+    display:inline-grid; place-items:center; font-size: 28px; margin-bottom: var(--space-3);
+  }
+  .bf-success h3 { font-size: var(--text-2xl); color: var(--forest-deep); margin-bottom: var(--space-2); }
+  .bf-success p { color: var(--color-ink-muted); font-size: var(--text-sm); line-height: var(--leading-normal); max-width: 48ch; margin: 0 auto var(--space-2); }
+  .bf-success__id { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--clay-deep) !important; }
+  .bf-success__actions { display:flex; gap: var(--space-2); justify-content:center; flex-wrap:wrap; margin-top: var(--space-4); }
+
+  @media (max-width: 880px) {
+    .bf-services { grid-template-columns: 1fr; }
+    .bf-datetime { grid-template-columns: 1fr; }
+    .bf-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .bf__section { padding: var(--space-3); }
+    .bf-slots__grid { grid-template-columns: 1fr; }
+  }
+</style>

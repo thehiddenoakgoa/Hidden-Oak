@@ -18,7 +18,7 @@
  */
 
 const BREVO_BASE = 'https://api.brevo.com/v3';
-const DEFAULT_CONTACT_EMAIL = 'thehiddenoak@gmail.com';
+const DEFAULT_CONTACT_EMAIL = 'thehiddenoak.goa@gmail.com';
 
 // Allow CORS from the same origin (the Pages site itself).
 const CORS_HEADERS = {

@@ -4,5 +4,8 @@ Allow: /
 # Internal style guide — no need to index
 Disallow: /style-guide
 
+# Admin CRM — hidden, unlisted, noindex (but also block crawlers here)
+Disallow: /admin/
+
 # Sitemap
 Sitemap: https://hidden-oak.pages.dev/sitemap-index.xml

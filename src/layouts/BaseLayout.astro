@@ -12,6 +12,7 @@ interface Props {
   ogImage?: string;
   ogType?: 'website' | 'article';
   canonical?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   description = 'Hidden Oak — a traditional Russian banya in Arambol, Goa. Wood-fired steam, ice bath, and quiet among the palms. Sessions from ₹1,000.',
   ogImage = '/images/hero/hero-poster.jpg',
   ogType = 'website',
+  noindex = false,
 } = Astro.props;
 
 const SITE = 'https://hidden-oak.pages.dev';
@@ -37,7 +39,7 @@ const businessJsonLd = {
   logo: new URL('/images/brand/hidden-oak-logo.png', SITE).href,
   url: SITE,
   telephone: '+919818083992',
-  email: 'thehiddenoak@gmail.com',
+  email: 'thehiddenoak.goa@gmail.com',
   priceRange: '₹₹',
   address: {
     '@type': 'PostalAddress',
@@ -84,7 +86,7 @@ const businessJsonLd = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />

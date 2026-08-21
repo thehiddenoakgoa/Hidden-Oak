@@ -2,12 +2,12 @@
 /**
  * Book a Session — /book
  *
- * Mounts the Cal.com inline scheduler via BookingEmbed.
- * The placeholder calLink "hidden-oak/banya-session" should be replaced
- * with the real Cal.com event URL when ready (see BookingEmbed.astro).
+ * Native booking system — replaces Cal.com.
+ * Posts to POST /api/bookings -> Brevo -> thehiddenoak.goa@gmail.com
+ * Cash on arrival only. Hidden admin CRM at /admin/oak-manage-9x3f
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BookingEmbed from '../components/BookingEmbed.astro';
+import BookingForm from '../components/BookingForm.astro';
 ---
 
 <BaseLayout
@@ -38,7 +38,7 @@ import BookingEmbed from '../components/BookingEmbed.astro';
         </p>
       </div>
 
-      <BookingEmbed calLink="hidden-oak/banya-session" />
+      <BookingForm />
     </div>
 
     <div class="container book__aside" data-reveal>
@@ -49,7 +49,7 @@ import BookingEmbed from '../components/BookingEmbed.astro';
         </p>
         <ul class="book__channels">
           <li><a href="https://wa.me/919818083992?text=Hi%20Hidden%20Oak%2C%20I%27d%20like%20to%20book%20a%20banya%20session." target="_blank" rel="noopener">WhatsApp →</a></li>
-          <li><a href="mailto:thehiddenoak@gmail.com">Email →</a></li>
+          <li><a href="mailto:thehiddenoak.goa@gmail.com">Email →</a></li>
           <li><a href="tel:+919818083992">Call +91 98180 83992 →</a></li>
         </ul>
       </div>

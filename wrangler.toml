@@ -15,10 +15,29 @@ pages_build_output_dir = "dist"
 compatibility_flags = ["nodejs_compat"]
 
 # Environment variables that are NOT secret can be defined here.
-# Secrets (BREVO_API_KEY) must be set via the Cloudflare dashboard or
-# `wrangler pages secret put BREVO_API_KEY`.
+# Secrets (BREVO_API_KEY, ADMIN_TOKEN) must be set via the Cloudflare dashboard or
+# `wrangler pages secret put BREVO_API_KEY` / `… ADMIN_TOKEN`.
 [vars]
-CONTACT_EMAIL = "thehiddenoak@gmail.com"
+CONTACT_EMAIL = "thehiddenoak.goa@gmail.com"
+BOOKING_EMAIL = "thehiddenoak.goa@gmail.com"
+SLOT_CAPACITY = "8"
+
+# ---- Optional persistence -----------------------------------------------
+# D1 database for bookings (recommended). Create with:
+#   npx wrangler d1 create hidden-oak-bookings
+# then copy the database_id below and uncomment.
+# If D1 is not configured, the app falls back to KV or in-memory.
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "hidden-oak-bookings"
+# database_id = "REPLACE_WITH_YOUR_D1_ID"
+# migrations_dir = "migrations"
+
+# KV namespace fallback (optional, cheaper).
+# Create with: npx wrangler kv namespace create BOOKINGS_KV
+# [[kv_namespaces]]
+# binding = "BOOKINGS_KV"
+# id = "REPLACE_WITH_KV_ID"
 
 # Optional: restrict the Pages Function to only run on /api/* paths, so static
 # assets are served directly without hitting the Worker runtime.
