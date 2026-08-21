@@ -23,15 +23,12 @@ BOOKING_EMAIL = "thehiddenoak.goa@gmail.com"
 SLOT_CAPACITY = "8"
 
 # ---- Optional persistence -----------------------------------------------
-# D1 database for bookings (recommended). Create with:
-#   npx wrangler d1 create hidden-oak-bookings
-# then copy the database_id below and uncomment.
-# If D1 is not configured, the app falls back to KV or in-memory.
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "hidden-oak-bookings"
-# database_id = "REPLACE_WITH_YOUR_D1_ID"
-# migrations_dir = "migrations"
+# D1 database for bookings — created 2026-08-21, APAC
+# ID: 29763e71-2710-4f17-8d6f-bd3a3a5df40d
+[[d1_databases]]
+binding = "DB"
+database_name = "hidden-oak-bookings"
+database_id = "29763e71-2710-4f17-8d6f-bd3a3a5df40d"
 
 # KV namespace fallback (optional, cheaper).
 # Create with: npx wrangler kv namespace create BOOKINGS_KV
