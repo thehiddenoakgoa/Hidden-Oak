@@ -54,10 +54,13 @@ export const GUESTS_MAX = 6;
 export const DEFAULT_CAPACITY = 8; // guests per slot
 
 export function slotLabel(slot: string): string {
-  // "18:00" -> "06:00 PM"
-  const [h, m] = slot.split(':').map(Number);
-  const d = new Date(Date.UTC(2000, 0, 1, h, m));
-  return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' });
+  // "18:00" -> "06:00 PM" — manual to avoid UTC→IST double conversion on Workers (UTC)
+  const [hStr, mStr] = slot.split(':');
+  let h = parseInt(hStr, 10);
+  const m = parseInt(mStr, 10);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${String(h12).padStart(2, '0')}:${String(m).padStart(2, '0')} ${ampm}`;
 }
 
 export function isValidDateStr(s: string): boolean {

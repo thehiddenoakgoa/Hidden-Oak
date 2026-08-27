@@ -23,6 +23,7 @@ import {
   isSlotAvailable,
   capacityForSlot,
   availabilityForDate,
+  slotLabel,
 } from '../_lib/bookings';
 import { getNotifyEmail, sendBookingNotifications } from '../_lib/brevo';
 import { isAuthorized, unauthorizedResponse } from '../_lib/auth';
@@ -146,13 +147,8 @@ export const onRequestPost: PagesFunction = async (context) => {
     emailStatus = { adminSent: false, customerSent: false, skipped: true, reason: 'BREVO_API_KEY not configured' };
   } else {
     try {
-      // slot label in IST
-      const slotLabel = new Date(`2000-01-01T${slot}:00`).toLocaleTimeString('en-IN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'Asia/Kolkata',
-      });
+      // slot label in IST — use shared helper (no UTC conversion)
+      const slotLabelStr = slotLabel(slot);
       const result = await sendBookingNotifications({
         apiKey,
         notifyEmail,
@@ -165,7 +161,7 @@ export const onRequestPost: PagesFunction = async (context) => {
           price: svc.price,
           date: booking.date,
           slot: booking.slot,
-          slotLabel,
+          slotLabel: slotLabelStr,
           guests: booking.guests,
           notes: booking.notes,
           status: booking.status,
