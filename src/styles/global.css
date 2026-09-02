@@ -382,6 +382,7 @@ html {
 .section--journey-band {
   position: relative;
   background: url('/images/journey-band.jpg') center / cover no-repeat;
+  border-block: none;
 }
 .divider.divider--tight-on-band {
   margin-block: 0 !important;
