@@ -379,6 +379,12 @@ html {
   background: var(--color-bg-muted);
   border-block: 1px solid var(--color-border);
 }
+.section--journey-band {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(250, 247, 241, 0.92), rgba(240, 235, 225, 0.9)),
+    url('/images/journey-band.jpg') center / cover no-repeat;
+}
 .section--jungle {
   background:
     radial-gradient(120% 100% at 50% 0%, rgba(61, 90, 72, 0.08), transparent 60%),
