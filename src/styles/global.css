@@ -381,9 +381,7 @@ html {
 }
 .section--journey-band {
   position: relative;
-  background:
-    linear-gradient(180deg, rgba(250, 247, 241, 0.92), rgba(240, 235, 225, 0.9)),
-    url('/images/journey-band.jpg') center / cover no-repeat;
+  background: url('/images/journey-band.jpg') center / cover no-repeat;
 }
 .section--jungle {
   background:
