@@ -383,6 +383,20 @@ html {
   position: relative;
   background: url('/images/journey-band.jpg') center / cover no-repeat;
 }
+.divider--tight-on-band {
+  margin-block: var(--space-1);
+  padding-block: var(--space-2);
+  color: #f8ead2;
+  background:
+    linear-gradient(rgba(22, 18, 13, 0.72), rgba(22, 18, 13, 0.72)),
+    url('/images/journey-band.jpg') center / cover no-repeat;
+}
+.divider--tight-on-band .divider__rule {
+  background: linear-gradient(to right, transparent, rgba(248, 234, 210, 0.5));
+}
+.divider--tight-on-band .divider__rule:last-child {
+  background: linear-gradient(to left, transparent, rgba(248, 234, 210, 0.5));
+}
 .section--jungle {
   background:
     radial-gradient(120% 100% at 50% 0%, rgba(61, 90, 72, 0.08), transparent 60%),
