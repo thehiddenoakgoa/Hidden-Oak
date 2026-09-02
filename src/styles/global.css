@@ -384,9 +384,11 @@ html {
   background: url('/images/journey-band.jpg') center / cover no-repeat;
 }
 .divider--tight-on-band {
-  margin-block: var(--space-1);
+  margin-block: 0;
   padding-block: var(--space-2);
   color: #f8ead2;
+  border-top: 1px solid rgba(248, 234, 210, 0.18);
+  border-bottom: 1px solid rgba(248, 234, 210, 0.18);
   background:
     linear-gradient(rgba(22, 18, 13, 0.72), rgba(22, 18, 13, 0.72)),
     url('/images/journey-band.jpg') center / cover no-repeat;
