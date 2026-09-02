@@ -261,7 +261,7 @@ const reasons = [
     </div>
   </section>
 
-  <SectionDivider />
+  <SectionDivider class="divider--tight-on-band" />
 
   {/* Journey — visual steps */}
   <section class="section section--band section--journey-band" data-reveal>
@@ -481,6 +481,16 @@ const reasons = [
     text-shadow: inherit;
   }
   .lede--center { max-width: 48ch; margin-inline: auto; }
+  .divider--tight-on-band {
+    margin-block: var(--space-1);
+    color: #f8ead2;
+  }
+  .divider--tight-on-band .divider__rule {
+    background: linear-gradient(to right, transparent, rgba(248, 234, 210, 0.5));
+  }
+  .divider--tight-on-band .divider__rule:last-child {
+    background: linear-gradient(to left, transparent, rgba(248, 234, 210, 0.5));
+  }
 
   /* Dual heat | ice */
   .dual-section { padding-top: var(--space-7); }
@@ -577,7 +587,7 @@ const reasons = [
     display: flex;
     align-items: flex-end;
     overflow: hidden;
-    margin-block: var(--space-4);
+    margin-top: var(--space-4);
   }
   .bleed-band > img,
   .bleed-band > video {
