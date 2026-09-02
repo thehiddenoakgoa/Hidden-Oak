@@ -394,10 +394,11 @@ html {
     url('/images/journey-band.jpg') center / cover no-repeat;
 }
 .divider.divider--tight-on-band .divider__rule {
-  background: linear-gradient(to right, transparent, rgba(248, 234, 210, 0.5));
+  display: none;
 }
-.divider.divider--tight-on-band .divider__rule:last-child {
-  background: linear-gradient(to left, transparent, rgba(248, 234, 210, 0.5));
+.divider.divider--tight-on-band .divider__glyph {
+  width: 72px;
+  height: 72px;
 }
 .section--jungle {
   background:
