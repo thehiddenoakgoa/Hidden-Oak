@@ -20,7 +20,8 @@ export interface TelegramBookingPayload {
 }
 
 function escapeMarkdown(str: string): string {
-  return str.replace(/_/g, '\\_').replace(/\*/g, '\\*').replace(/`/g, '\\`').replace(/~/g, '\\~');
+  const reserved = /[_*[\]()~`>#+\-=|{}.!\\]/g;
+  return String(str).replace(reserved, '\\$&');
 }
 
 export async function sendTelegramBookingNotification(
@@ -39,17 +40,21 @@ export async function sendTelegramBookingNotification(
   const email = escapeMarkdown(booking.email);
   const phone = booking.phone ? escapeMarkdown(booking.phone) : '—';
   const notes = booking.notes ? escapeMarkdown(booking.notes) : '—';
+  const service = escapeMarkdown(booking.service_label);
+  const price = escapeMarkdown(booking.price);
+  const slotLabel = escapeMarkdown(booking.slotLabel);
+  const date = escapeMarkdown(booking.date);
 
   const text = [
-    `🔥 *New Booking — Hidden Oak*`,
+    `🔥 *New Booking \\- Hidden Oak*`,
     ``,
     `*ID:* \`${booking.id}\``,
     `*Guest:* ${name}`,
     `*Email:* ${email}`,
     `*Phone:* ${phone}`,
-    `*Service:* ${booking.service_label} \\(${booking.price}\\)`,
-    `*Date:* ${booking.date}`,
-    `*Time:* ${booking.slotLabel}`,
+    `*Service:* ${service} \\(${price}\\)`,
+    `*Date:* ${date}`,
+    `*Time:* ${slotLabel}`,
     `*Guests:* ${booking.guests}`,
     `*Notes:* ${notes}`,
     ``,
