@@ -26,6 +26,7 @@ import {
   slotLabel,
 } from '../_lib/bookings';
 import { getNotifyEmail, sendBookingNotifications } from '../_lib/brevo';
+import { sendTelegramBookingNotification } from '../_lib/telegram';
 import { isAuthorized, unauthorizedResponse } from '../_lib/auth';
 
 const CORS_HEADERS = {
@@ -205,7 +206,28 @@ export const onRequestPost: PagesFunction = async (context) => {
     }
   }
 
-  return jsonResponse({ ok: true, message: 'Booking confirmed. Pay cash on arrival.', id: booking.id, booking, email: emailStatus });
+  // ---- Telegram notification (non-blocking) ---
+  let telegramStatus: any = { sent: false, skipped: false };
+  try {
+    const slotLabelStr = slotLabel(slot);
+    telegramStatus = await sendTelegramBookingNotification(e, {
+      id: booking.id,
+      name: booking.name,
+      email: booking.email,
+      phone: booking.phone,
+      service_label: booking.service_label,
+      price: svc.price,
+      date: booking.date,
+      slotLabel: slotLabelStr,
+      guests: booking.guests,
+      notes: booking.notes,
+    });
+  } catch (err: any) {
+    console.error('Telegram notification failed (non-critical)', err);
+    telegramStatus = { sent: false, error: String(err?.message || err) };
+  }
+
+  return jsonResponse({ ok: true, message: 'Booking confirmed. Pay cash on arrival.', id: booking.id, booking, email: emailStatus, telegram: telegramStatus });
 };
 
 // ---- GET: list bookings (admin only) -------------------------------------
