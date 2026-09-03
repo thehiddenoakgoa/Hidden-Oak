@@ -62,8 +62,9 @@ const embedSrc = `https://www.youtube-nocookie.com/embed/videoseries?list=${uplo
     position: absolute;
     inset: 0;
     z-index: 0;
-    background: url('/images/sauna-section.jpg') center / cover no-repeat;
-    opacity: 0.5;
+    background:
+      rgba(0, 0, 0, 0.1),
+      url('/images/sauna-section.jpg') center / cover no-repeat;
     pointer-events: none;
   }
   .video-section :global(.container) {
@@ -77,9 +78,17 @@ const embedSrc = `https://www.youtube-nocookie.com/embed/videoseries?list=${uplo
     text-align: center;
     gap: var(--space-2);
     margin-bottom: var(--space-5);
+    margin-inline: auto;
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-5);
+    background: rgba(26, 28, 24, 0.35);
+    backdrop-filter: blur(2px);
+    max-width: var(--container-narrow);
+    color: #fdf6ec;
   }
-  .video-section__head h2 { color: var(--forest-deep); }
-  .video-section__head .lede { margin-inline: auto; }
+  .video-section__head h2,
+  .video-section__head .eyebrow,
+  .video-section__head .lede { color: #fdf6ec; }
 
   .video-section__frame {
     position: relative;
