@@ -404,7 +404,6 @@ html {
   background:
     rgba(0, 0, 0, 0.1),
     url('/images/why-band.jpg') center / cover no-repeat;
-  border-block: 1px solid rgba(61, 90, 72, 0.15);
   position: relative;
 }
 .section--jungle::before {
