@@ -489,7 +489,12 @@ const reasons = [
   .lede--center { max-width: 48ch; margin-inline: auto; }
 
   /* Dual heat | ice */
-  .dual-section { padding-top: var(--space-7); }
+  .dual-section {
+    padding-top: var(--space-7);
+    background:
+      rgba(0, 0, 0, 0.1),
+      url('/images/journey-band.jpg') center / cover no-repeat;
+  }
   .dual-split {
     display: grid;
     grid-template-columns: 1fr 1fr;
