@@ -402,7 +402,7 @@ html {
 }
 .section--jungle {
   background:
-    rgba(247, 243, 236, 0.78),
+    rgba(0, 0, 0, 0.1),
     url('/images/why-band.jpg') center / cover no-repeat;
   border-block: 1px solid rgba(61, 90, 72, 0.15);
   position: relative;
