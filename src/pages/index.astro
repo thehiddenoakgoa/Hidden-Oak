@@ -114,7 +114,7 @@ const reasons = [
   {/* Dual split: Heat | Ice — image first */}
   <section class="section dual-section" data-reveal>
     <div class="container">
-      <div class="block-head block-head--center">
+      <div class="block-head block-head--center block-head--on-media">
         <div class="dual-badge" data-reveal="fade">
           <span class="dual-badge__heat">
             <span class="deco-icon deco-icon--sm deco-icon--flame"></span> Heat
@@ -485,6 +485,10 @@ const reasons = [
   .block-head--on-media .lede {
     color: #fdf6ec;
     text-shadow: none;
+  }
+  .block-head--on-media .dual-badge__heat,
+  .block-head--on-media .dual-badge__ice {
+    color: #fdf6ec;
   }
   .lede--center { max-width: 48ch; margin-inline: auto; }
 
