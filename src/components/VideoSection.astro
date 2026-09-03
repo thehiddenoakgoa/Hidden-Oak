@@ -30,6 +30,7 @@ const embedSrc = `https://www.youtube-nocookie.com/embed/videoseries?list=${uplo
 ---
 
 <section class:list={['section video-section', className]} data-reveal>
+  <div class="video-section__bg" aria-hidden="true"></div>
   <div class="container">
     <div class="video-section__head">
       <p class="eyebrow">{eyebrow}</p>
@@ -54,6 +55,21 @@ const embedSrc = `https://www.youtube-nocookie.com/embed/videoseries?list=${uplo
 </section>
 
 <style>
+  .video-section {
+    position: relative;
+  }
+  .video-section__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: url('/images/sauna-section.jpg') center / cover no-repeat;
+    opacity: 0.32;
+    pointer-events: none;
+  }
+  .video-section :global(.container) {
+    position: relative;
+    z-index: 1;
+  }
   .video-section__head {
     display: flex;
     flex-direction: column;
