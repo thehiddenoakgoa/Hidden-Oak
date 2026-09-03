@@ -424,7 +424,18 @@ const reasons = [
     margin-top: var(--space-5);
     padding-inline: var(--space-3);
   }
+  .stats-strip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      rgba(0, 0, 0, 0.1),
+      url('/images/journey-band.jpg') center / cover no-repeat;
+    pointer-events: none;
+  }
   .stats {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1px;
