@@ -14,6 +14,7 @@ const nav = [
 ];
 
 const WHATSAPP_URL = 'https://wa.me/919818083992';
+const TEL_URL = 'tel:+919818083992';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) =>
@@ -53,7 +54,10 @@ const isActive = (href: string) =>
           ))
         }
         <li class="site-nav__cta-li">
-          <CTAButton href={WHATSAPP_URL} size="md" class="site-nav__cta">Call</CTAButton>
+          <CTAButton href={TEL_URL} size="md" class="site-nav__cta">Call</CTAButton>
+        </li>
+        <li class="site-nav__cta-li">
+          <CTAButton href={WHATSAPP_URL} size="md" class="site-nav__cta site-nav__cta--whatsapp">WhatsApp</CTAButton>
         </li>
       </ul>
     </nav>
